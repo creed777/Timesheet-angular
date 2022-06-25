@@ -1,0 +1,66 @@
+
+<h1>Project Setup</h1>
+<form [formGroup]="projectSetupForm" (ngSubmit)="onSubmit()">
+  <div class="container row">
+    <div class="col-5 col-sm-5 col-med-5 col-lg-5 col-xl-5 e-primary">
+      <fieldset>
+        <legend>Project Basics</legend>
+        <div class="col-25"><label for="txtName">Name</label></div>
+        <div class="col-75"><input type="text" id="txtName" formControlName="txtName" /></div>
+        <div class="col-25"><label for="txtDescription">Description</label></div>
+        <div class="col-75"><textarea rows=3 cols=20 id="txtDescription" formControlName="txtDescription"></textarea></div>
+        <div class="col-25"><label for="ddlStatus">Status</label></div>
+        <div class="col-75">
+          <select id="ddlStatus" formControlName="ddlStatus">
+            <option selected="selected" value="0">Select a status</option>
+            <option value="1">Status</option>
+          </select>
+        </div>
+        <div class="col-25"><label for="ddlClient">Client</label></div>
+        <div class="col-75">
+          <select id="ddlClient" formControlName="ddlClient">
+            <option selected="selected" value="0">Select a client</option>
+            <option value="1">Tesla</option>
+          </select>
+        </div>
+        <div class="col-25"><label for="ddlType">Type</label></div>
+        <div class="col-75">
+          <select id="ddlType" formControlName="ddlType">
+            <option selected="selected" value="0">Select a project type</option>
+            <option value="1">Type1</option>
+            <option value="1">Type2</option>
+          </select>
+        </div>
+        <div class="col-25"><label for="txtStartDate">Start Date</label></div>
+        <div class="col-75"><input type="date" id="txtStartDate" formControlName="txtStartDate" /></div>
+        <div class="col-25"><label for="txtStartDate">End Date</label></div>
+        <div class="col-75"><input type="date" id="txtEndDate" formControlName="txtEndDate" /></div>
+      </fieldset>
+    </div>
+    <div class="col-5 col-sm-5 col-med-5 col-lg-5 col-xl-5 e-primary">
+      <fieldset>
+        <legend>Cost Estimations</legend>
+        <div class="col-25"><label for="txtEstTotalHrs">Estimated Hrs.</label></div>
+        <div class="col-75"><input type="number" id="txtEstTotalHrs" formcontrolname="txtEstTotalHrs" /></div>
+        <div class="col-25"><label for="txtEstLaborCost">Estimated Labor</label></div>
+        <div class="col-75"><input type="number" id="txtEstLaborCost" formcontrolname="txtEstLaborCost" /></div>
+      </fieldset>
+      <fieldset>
+        <legend>Project Settings</legend>
+        <div style="justify-content:left;">
+          <input type="checkbox" id="customTask" formcontrolname="chkCustomTask" />
+          <label for="customTask">Allow custom tasks</label>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="container row">
+    <div class="col-5 col-sm-5 col-med-5 col-lg-5 col-xl-5 e-primary">
+    </div>
+    <div class="col-5 col-sm-5 col-med-5 col-lg-5 col-xl-5 e-primary">
+
+    </div>
+  </div>
+      <button class="btn-primary" type="submit" [disabled]="!projectSetupForm.valid">Submit</button>
+
+</form>
