@@ -2,7 +2,7 @@
 
 namespace API.Interfaces
 {
-    public interface ITimesheetDataService
+    public interface IProjectDataService
     {
         Task<ProjectModel> GetProject(string projectId);
         Task<List<ProjectModel>> GetAllProjects();

@@ -4,17 +4,17 @@ using Timesheet_angular.Models;
 
 namespace Timesheet_angular.Services
 {
-    public class TimesheetDataService
+    public class ProjectDataService
     {
         private readonly IWebHostEnvironment _environment;
-        private ILogger<TimesheetDataService> _logger { get; set; }
+        private ILogger<ProjectDataService> _logger { get; set; }
         public NavigationManager _navManager { get; set; }
         private DatabaseContext _dbContext;
         private readonly IHttpContextAccessor _httpContext;
         [Inject] private IDbContextFactory<DatabaseContext> _dbFactory { get; set; }
         public IDbContextFactory<DatabaseContext> DbFactory => _dbFactory;
 
-        public TimesheetDataService(ILogger<TimesheetDataService> logger, IWebHostEnvironment env, IHttpContextAccessor accessor, IDbContextFactory<DatabaseContext> databaseFactory, NavigationManager navManger, DatabaseContext databaseContext, bool initialize = true)
+        public ProjectDataService(ILogger<ProjectDataService> logger, IWebHostEnvironment env, IHttpContextAccessor accessor, IDbContextFactory<DatabaseContext> databaseFactory, NavigationManager navManger, DatabaseContext databaseContext, bool initialize = true)
         {   
             _dbContext = databaseContext;
             _environment = env;

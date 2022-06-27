@@ -1,16 +1,16 @@
-using API.Models;
 using API.Interfaces;
+using API.Models;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
+using API.Domains;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
-builder.Services.AddSingleton<ITimesheetDataService,TimesheetDataService>();
+builder.Services.AddSingleton<IProjectDataService,ProjectDataService>();
+builder.Services.AddSingleton<IProjectDomain, ProjectDomain>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {

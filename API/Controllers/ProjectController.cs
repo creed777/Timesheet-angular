@@ -1,6 +1,8 @@
 ﻿using API.Interfaces;
 using API.Models;
+using API.Domains;
 using Microsoft.AspNetCore.Mvc;
+using API.Services;
 
 namespace API.Controllers
 {
@@ -8,14 +10,11 @@ namespace API.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        //private readonly DatabaseContext _context;
-        private ITimesheetDataService _timesheet;
-        private IHttpContextAccessor _contextAccessor;
+        private readonly IProjectDomain _projectDomain;
 
-        public ProjectController(ITimesheetDataService timesheet, IHttpContextAccessor contextAccessor)
+        public ProjectController(IProjectDomain projectDomain)
         {
-            _timesheet = timesheet;
-            _contextAccessor = contextAccessor;
+            _projectDomain = projectDomain;
         }
 
         /// <summary>
@@ -25,7 +24,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProjectModel>>> GetAllProjects()
         {
-            var result = await _timesheet.GetAllProjects();
+          var result = await _projectDomain.GetAllProjects();
 
           if (result == null)
               return NotFound();
@@ -50,7 +49,7 @@ namespace API.Controllers
             if (projectId == null)
                 return BadRequest();
 
-            var result = await _timesheet.GetProject(projectId);
+            var result = await _projectDomain.GetProject(projectId);
 
             if (result == null)
                 return null;
@@ -66,11 +65,11 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<ProjectModel>> AddProject(ProjectModel project)
         {
-          if (project == null)
-              return BadRequest();
+            if (project == null)
+                return BadRequest();
 
-          await _timesheet.AddProject(project);
-          return CreatedAtAction("GetProjectModel", new { id = project.Id }, project);
+            await _projectDomain.AddProject(project);
+            return CreatedAtAction("GetProjectModel", new { id = project.Id }, project);
         }
 
         /// <summary>
@@ -84,13 +83,13 @@ namespace API.Controllers
             if (string.IsNullOrEmpty(projectId))
                 return BadRequest();
 
-            var project = await _timesheet.GetProject(projectId);
+            var project = await _projectDomain.GetProject(projectId);
             if (project == null)
             {
                 return NoContent();
             }
 
-            await _timesheet.DeleteProject(projectId);
+            await _projectDomain.DeleteProject(projectId);
             return Ok();
         }
     }
