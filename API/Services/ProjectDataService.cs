@@ -5,16 +5,16 @@ using API.Interfaces;
 
 namespace API.Services
 {
-    public class TimesheetDataService : ITimesheetDataService
+    public class ProjectDataService : IProjectDataService
     {
-        private ILogger<TimesheetDataService> _logger { get; set; }
-        [Inject] public NavigationManager navigationManager { get; set; }
-        [Inject] private IHttpContextAccessor _httpContext { get; set; }
-        [Inject] private IDbContextFactory<DatabaseContext> _dbFactory { get; set; }
-        public IDbContextFactory<DatabaseContext> DbFactory => _dbFactory;
+        private ILogger<ProjectDataService> _logger { get; set; }
+        public NavigationManager navigationManager { get; set; }
+        private IHttpContextAccessor _httpContext { get; set; }
+        private IDbContextFactory<DatabaseContext> _dbFactory { get; set; }
+        //public IDbContextFactory<DatabaseContext> DbFactory => _dbFactory;
 
-        public TimesheetDataService(
-            ILogger<TimesheetDataService> logger, 
+        public ProjectDataService(
+            ILogger<ProjectDataService> logger, 
             IHttpContextAccessor accessor, 
             IDbContextFactory<DatabaseContext> databaseFactory, 
             //NavigationManager navManger, 
@@ -93,13 +93,14 @@ namespace API.Services
             await using var db = _dbFactory.CreateDbContext();
 
             if (string.IsNullOrEmpty(projectId))
-                new ArgumentNullException(nameof(projectId));
+            {
+                _logger.LogError(new ArgumentNullException(nameof(projectId)).ToString());
+                return false;
+            }
 
             var projectModel = await db.Project.FindAsync(projectId);
             if (projectModel == null)
-            {
                 return false;
-            }
 
             try
             {

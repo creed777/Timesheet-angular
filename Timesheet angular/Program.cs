@@ -15,7 +15,7 @@ builder.Services.AddDbContextFactory<DatabaseContext>(options =>
 builder.Services.AddScoped(p =>
    p.GetRequiredService<IDbContextFactory<DatabaseContext>>().CreateDbContext());
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<TimesheetDataService>();
+builder.Services.AddScoped<ProjectDataService>();
 builder.Services.AddScoped<ClientDataService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
