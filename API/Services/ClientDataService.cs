@@ -1,26 +1,23 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
+﻿using API.Interfaces;
 using API.Models;
+using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
 {
-    public class ClientDataService
+    public class ClientDataService : IClientDataServices
     {
-        private readonly IWebHostEnvironment _environment;
         private ILogger<ClientDataService> _logger { get; set; }
-        public NavigationManager _navManager { get; set; }
-        private DatabaseContext _dbContext;
         private readonly IHttpContextAccessor _httpContext;
-        [Inject] private IDbContextFactory<DatabaseContext> _dbFactory { get; set; }
-        public IDbContextFactory<DatabaseContext> DbFactory => _dbFactory;
+        private IDbContextFactory<DatabaseContext> _dbFactory { get; set; }
 
-        public ClientDataService(ILogger<ClientDataService> logger, IWebHostEnvironment env, IHttpContextAccessor accessor, IDbContextFactory<DatabaseContext> databaseFactory, NavigationManager navManger, DatabaseContext databaseContext, bool initialize = true)
+        public ClientDataService(ILogger<ClientDataService> logger, 
+            IHttpContextAccessor accessor, 
+            IDbContextFactory<DatabaseContext> databaseFactory, 
+            bool initialize = true)
         {
-            _dbContext = databaseContext;
-            _environment = env;
             _httpContext = accessor;
             _dbFactory = databaseFactory;
-            _navManager = navManger;
             _logger = logger;
 
             if (initialize)
@@ -42,15 +39,82 @@ namespace API.Services
 
         }
 
-        public async Task<List<ClientModel>> GetAllActiveClientsAsync()
+        public async Task<List<ClientModel>> GetAllClientsAsync()
         {
             await using var db = _dbFactory.CreateDbContext();
-            var result = await db.Client
-                .Where(c => c.ClientStatus.Id == 1)
-                .AsNoTracking()
-                .ToListAsync();
+            try
+            {
+                return await db.Client
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            catch(DbUpdateException ex)
+            {
+                _logger.LogCritical(ex.Message);
+                return new List<ClientModel>();
+            }
+        }
 
-            return result;
+        public async Task<List<ClientModel>> GetClientAsync(string clientId)
+        {
+            await using var db = _dbFactory.CreateDbContext();
+            try
+            {
+                return await db.Client
+                    .Where(x => x.ClientId == clientId)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                return new List<ClientModel>();
+            }
+        }
+
+        public async Task<int> AddClientAsync(ClientModel client)
+        {
+           await using var db = _dbFactory.CreateDbContext();
+
+            if (client == null)
+               _logger.LogDebug(new ArgumentNullException(nameof(client)).ToString());
+                
+            try
+            {
+                await db.Client.AddAsync(client);
+                return await db.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogCritical(ex.Message);
+                return -1;
+            }
+        }
+
+        public async Task<int> DeleteClient(string clientId)
+        {
+            await using var db = _dbFactory.CreateDbContext();
+
+            if (string.IsNullOrEmpty(clientId))
+            {
+                _logger.LogError(new ArgumentNullException(nameof(clientId)).ToString());
+                return -1;
+            }
+
+            var clientModel = await db.Project.FindAsync(clientId);
+            if (clientModel == null)
+                return -1;
+
+            try
+            {
+                db.Project.Remove(clientModel);
+                return await db.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogCritical(ex.Message);
+                return -1;
+            }
         }
     }
 }

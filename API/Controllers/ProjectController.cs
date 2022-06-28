@@ -24,12 +24,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProjectModel>>> GetAllProjects()
         {
-          var result = await _projectDomain.GetAllProjects();
-
-          if (result == null)
-              return NotFound();
-
-            return Ok(result);
+          return Ok(await _projectDomain.GetAllProjects());
         }
 
         /// <summary>
@@ -49,12 +44,8 @@ namespace API.Controllers
             if (projectId == null)
                 return BadRequest();
 
-            var result = await _projectDomain.GetProject(projectId);
+            return Ok(await _projectDomain.GetProject(projectId));
 
-            if (result == null)
-                return null;
-
-            return result;
         }
 
         /// <summary>
@@ -89,8 +80,7 @@ namespace API.Controllers
                 return NoContent();
             }
 
-            await _projectDomain.DeleteProject(projectId);
-            return Ok();
+            return Ok(await _projectDomain.DeleteProject(projectId));
         }
     }
 }
