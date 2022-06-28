@@ -10,9 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 //add data services
+builder.Services.AddSingleton<IResourceDataService, ResourceDataService>();
 builder.Services.AddSingleton<IClientDataServices, ClientDataService>();
 builder.Services.AddSingleton<IProjectDataService,ProjectDataService>();
 //add domains
+builder.Services.AddSingleton<IResourceDomain, ResourceDomain>();
 builder.Services.AddSingleton<IClientDomain, ClientDomain>();
 builder.Services.AddSingleton<IProjectDomain, ProjectDomain>();
 
