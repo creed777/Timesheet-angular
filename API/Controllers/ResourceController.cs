@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using API.Interfaces;
 using API.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
@@ -16,15 +11,11 @@ namespace API.Controllers
     [ApiController]
     public class ResourceController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IResourceDomain _resourceDomain;
 
-        /// <summary>
-        /// Actions to manage resources
-        /// </summary>
-        /// <param name="context"></param>
-        public ResourceController(DatabaseContext context)
+        public ResourceController(IResourceDomain projectDomain)
         {
-            _context = context;
+            _resourceDomain = projectDomain;
         }
 
         // GET: api/Resource
@@ -35,100 +26,71 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ResourceModel>>> GetAllProjectResources()
         {
-          if (_context.ProjectResources == null)
-          {
-              return NotFound();
-          }
-            return await _context.ProjectResources.ToListAsync();
+            return await _resourceDomain.GetAllResourcesAsync();
         }
 
         // GET: api/Resource/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ResourceModel>> GetResourceModel(int id)
+        [HttpGet("{projectId}")]
+        public async Task<ActionResult<ResourceModel>> GetResourceModel(string resourceId)
         {
-          if (_context.ProjectResources == null)
-          {
-              return NotFound();
-          }
-            var resourceModel = await _context.ProjectResources.FindAsync(id);
+            if (string.IsNullOrEmpty(resourceId))
+                return BadRequest(new ArgumentNullException(resourceId));
 
-            if (resourceModel == null)
-            {
-                return NotFound();
-            }
-
+            var resourceModel = await _resourceDomain.GetResourceAsync(resourceId);
             return resourceModel;
         }
 
-        // PUT: api/Resource/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutResourceModel(int id, ResourceModel resourceModel)
-        {
-            if (id != resourceModel.Id)
-            {
-                return BadRequest();
-            }
+        //// PUT: api/Resource/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutResourceModel(int id, ResourceModel resourceModel)
+        //{
+        //    if (id != resourceModel.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(resourceModel).State = EntityState.Modified;
+        //    _project.Entry(resourceModel).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ResourceModelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!ResourceModelExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         // POST: api/Resource
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ResourceModel>> PostResourceModel(ResourceModel resourceModel)
+        public async Task<ActionResult<int>> AddResourceAsync(ResourceModel resource)
         {
-          if (_context.ProjectResources == null)
-          {
-              return Problem("Entity set 'DatabaseContext.ProjectResources'  is null.");
-          }
-            _context.ProjectResources.Add(resourceModel);
-            await _context.SaveChangesAsync();
+            if (resource == null)
+                return BadRequest(new ArgumentNullException());
 
-            return CreatedAtAction("GetResourceModel", new { id = resourceModel.Id }, resourceModel);
+            return await _resourceDomain.AddResourceAsync(resource);
         }
 
         // DELETE: api/Resource/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteResourceModel(int id)
+        [HttpDelete("{resourceId}")]
+        public async Task<IActionResult> DeleteResource(string resourceId)
         {
-            if (_context.ProjectResources == null)
-            {
-                return NotFound();
-            }
-            var resourceModel = await _context.ProjectResources.FindAsync(id);
-            if (resourceModel == null)
-            {
-                return NotFound();
-            }
+            if (string.IsNullOrEmpty(resourceId))
+                return BadRequest(new ArgumentNullException(resourceId));
 
-            _context.ProjectResources.Remove(resourceModel);
-            await _context.SaveChangesAsync();
-
+            await _resourceDomain.DeleteResourceAsync(resourceId);
             return NoContent();
-        }
-
-        private bool ResourceModelExists(int id)
-        {
-            return (_context.ProjectResources?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
