@@ -1,16 +1,21 @@
+using API.Domains;
 using API.Interfaces;
 using API.Models;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using API.Domains;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
+//add data services
+builder.Services.AddSingleton<IClientDataServices, ClientDataService>();
 builder.Services.AddSingleton<IProjectDataService,ProjectDataService>();
+//add domains
+builder.Services.AddSingleton<IClientDomain, ClientDomain>();
 builder.Services.AddSingleton<IProjectDomain, ProjectDomain>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {

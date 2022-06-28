@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using API.Interfaces;
 using API.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
@@ -13,128 +8,78 @@ namespace API.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IClientDomain _clientDomain;
 
-        public ClientController(DatabaseContext context)
+        public ClientController(IClientDomain clientDomain)
         {
-            _context = context;
+            _clientDomain = clientDomain;
         }
 
-        // GET: api/ClientModels
+        /// <summary>
+        /// Returns a list of Clients
+        /// </summary>
+        /// <returns><see cref="IEnumerable{ClientModel}"/></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ClientModel>>> GetAllClients()
         {
-          if (_context.Client == null)
-          {
-              return NotFound();
-          }
-            return await _context.Client.ToListAsync();
+            var result = await _clientDomain.GetAllClientsAsync();
+            return result;
         }
 
-        // GET: api/ClientModels/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ClientModel>> GetClient(int id)
+        /// <summary>
+        /// Returns a client by client Id
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns><see cref="ActionResult{ClientModel}"/></returns>
+        [HttpGet("{clientId}")]
+        public async Task<ActionResult<ClientModel>> GetClient(string clientId)
         {
-          if (_context.Client == null)
-          {
-              return NotFound();
-          }
-            var clientModel = await _context.Client.FindAsync(id);
+            if (string.IsNullOrEmpty(clientId))
+                return BadRequest();
 
-            if (clientModel == null)
-            {
-                return NotFound();
-            }
-
-            return clientModel;
+            return Ok(await _clientDomain.GetClientAsync(clientId));
         }
 
-        // PUT: api/ClientModels/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutClient(int id, ClientModel clientModel)
-        //{
-        //    if (id != clientModel.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(clientModel).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!ClientModelExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        // POST: api/PostClient
-        // To protect from ove4rposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{ClientModel}")]
+        /// <summary>
+        /// Adds a new client
+        /// </summary>
+        /// <param name="clientModel"></param>
+        /// <returns><see cref="ActionResult{ClientModel}"/></returns>
+        [HttpPost("{clientModel}")]
         public async Task<ActionResult<ClientModel>> AddClient(ClientModel clientModel)
         {
-          if (_context.Client == null)
-          {
-              return Problem("Entity set 'DatabaseContext.Client'  is null.");
-          }
-
-            _context.Client.Add(clientModel);
-            var result = await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetClientModel", new { id = clientModel.Id }, clientModel);
+            return Ok(await _clientDomain.AddClientAsync(clientModel));
         }
 
-        // POST: api/PostClient
-        // To protect from ove4rposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{ClientModel}")]
-        public async Task<ActionResult<ClientModel>> UpdateClient(ClientModel clientModel)
+        /// <summary>
+        /// Updates an existing client record
+        /// </summary>
+        /// <param name="clientModel"></param>
+        /// <returns><see cref="ActionResult{ClientModel}"/></returns>
+        //[HttpPost("{ClientModel}")]
+        //public async Task<ActionResult<ClientModel>> UpdateClient(ClientModel clientModel)
+        //{
+        //    if (clientModel == null)
+        //        return BadRequest();
+
+        //    _clientDomain.Upd(clientModel);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok();
+        //}
+
+        /// <summary>
+        /// Permanently deletes a client record by Id
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns><see cref="IActionResult"/></returns>
+        [HttpDelete("{clientId}")]
+        public async Task<IActionResult> DeleteClient(string clientId)
         {
-            if (_context.Client == null)
-            {
-                return Problem("Entity set 'DatabaseContext.Client'  is null.");
-            }
+            if(string.IsNullOrEmpty(clientId))
+                return BadRequest();
 
-            _context.Client.Attach(clientModel);
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-
-        // DELETE: api/ClientModels/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClient(int id)
-        {
-            if (_context.Client == null)
-            {
-                return NotFound();
-            }
-            var clientModel = await _context.Client.FindAsync(id);
-            if (clientModel == null)
-            {
-                return NotFound();
-            }
-
-            _context.Client.Remove(clientModel);
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-
-        private bool ClientModelExists(int id)
-        {
-            return (_context.Client?.Any(e => e.Id == id)).GetValueOrDefault();
+            return Ok( await _clientDomain.DeleteClient(clientId));
         }
     }
 }

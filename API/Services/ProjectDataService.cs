@@ -8,21 +8,17 @@ namespace API.Services
     public class ProjectDataService : IProjectDataService
     {
         private ILogger<ProjectDataService> _logger { get; set; }
-        public NavigationManager navigationManager { get; set; }
         private IHttpContextAccessor _httpContext { get; set; }
         private IDbContextFactory<DatabaseContext> _dbFactory { get; set; }
-        //public IDbContextFactory<DatabaseContext> DbFactory => _dbFactory;
 
         public ProjectDataService(
             ILogger<ProjectDataService> logger, 
             IHttpContextAccessor accessor, 
             IDbContextFactory<DatabaseContext> databaseFactory, 
-            //NavigationManager navManger, 
             bool initialize = true)
         {
             _httpContext = accessor;
             _dbFactory = databaseFactory;
-            //_navManager = navManger;
             _logger = logger;
 
             if (initialize)
