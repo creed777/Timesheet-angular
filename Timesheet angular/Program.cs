@@ -1,6 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Timesheet_angular.Models;
-using Timesheet_angular.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,22 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContextFactory<DatabaseContext>(options =>
-    options.UseSqlServer(connectionString));
-
-builder.Services.AddScoped(p =>
-   p.GetRequiredService<IDbContextFactory<DatabaseContext>>().CreateDbContext());
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ProjectDataService>();
-builder.Services.AddScoped<ClientDataService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContextFactory<DatabaseContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-        sqlServerOptions => sqlServerOptions.CommandTimeout(60));
-}, ServiceLifetime.Scoped);
 
 var app = builder.Build();
 
