@@ -27,10 +27,12 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/main.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -129,5 +131,8 @@
       }
     }
   },
-  "defaultProject": "Timesheet_angular"
+  "defaultProject": "Timesheet_angular",
+  "cli": {
+    "analytics": false
+  }
 }

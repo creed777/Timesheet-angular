@@ -1,0 +1,17 @@
+<div [@dialog] *ngIf="visible" class="dialog">
+  <h3>Edit Resource</h3><br />
+  <ng-form>
+    <div style="display:flex; flex-direction:column;">
+      <label for="fname">First Name</label>
+      <input name="fname" />
+      <label for="lname">Last Name</label>
+      <input name="lname" />
+      <label for="resourceType">Resource Type</label>
+      <input name="resourceType" />
+    </div>
+  </ng-form>
+
+  <button *ngIf="closable" (click)="close()" aria-label="Save" class="dialog__close-btn">X</button>
+  <button *ngIf="closable" (click)="close()" aria-label="Cancel" class="dialog__close-btn">X</button>
+</div>
+<div *ngIf="visible" class="overlay" (click)="close()"></div>

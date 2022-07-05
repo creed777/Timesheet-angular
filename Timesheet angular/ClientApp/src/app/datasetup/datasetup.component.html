@@ -1,0 +1,63 @@
+<h2>Data Setup</h2><br />
+
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+  <li [ngbNavItem]="1">
+    <a ngbNavLink>Resources</a>
+    <ng-template ngbNavContent>
+      <div class="m-3">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col" width="5%">Id</th>
+              <th scope="col" sortable="name" width="10%">Name</th>
+              <th scope="col" sortable="type" width="10%">Type</th>
+              <th scope="col" width="10%">Blended Rate</th>
+              <th scope="col" width="10%"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let resource of resources | slice: (page-1) * pageSize : page * pageSize; index as i">
+              <th scope="row">{{ (page -1) * pageSize + i + 1 }}</th>
+              <td> {{ resource.name }}</td>
+              <td> {{ resource.type }}</td>
+              <td> {{ resource.rate | number }}</td>
+              <td align="right"><button class="imgButton" (click)="dialog.OpenDialog()"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg></button></td>
+              <app-dialog #dialog></app-dialog>
+            </tr>
+          </tbody>
+        </table>
+        <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [maxSize]="5" [boundaryLinks]="true"
+                        [pageSize]="pageSize" class="d-flex justify-content-center"></ngb-pagination>
+      </div>
+
+      <app-dialog [(visible)]="showDialog">
+        <h1>Hello World</h1>
+        <button (click)="showDialog = !showDialog" class="btn">Close</button>
+      </app-dialog>
+
+      <router-outlet></router-outlet>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2">
+    <a ngbNavLink>Two</a>
+    <ng-template ngbNavContent>
+
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="3">
+    <a ngbNavLink>Three</a>
+    <ng-template ngbNavContent>
+      <p>
+        Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id diam. Nulla facilisi.
+        Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis, luctus eget tincidunt eu, congue et odio.
+        Duis pharetra et nisl at faucibus. Quisque luctus pulvinar arcu, et molestie lectus ultrices et. Sed diam urna,
+        egestas ut ipsum vel, volutpat volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec
+        tristique ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque penatibus et
+        magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac lorem aliquet ultricies in eget
+        neque. Phasellus nec tortor vel tellus pulvinar feugiat.
+      </p>
+    </ng-template>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>

@@ -1,0 +1,21 @@
+
+  [
+    {
+      "name": "Joe Blow",
+      "type": "Project Manager",
+      "rate": "53"
+    },
+
+    {
+      "name": "Jane Doe",
+      "type": "Software Developer",
+      "rate": "75"
+    },
+
+    {
+      "name": "Billybob Thornton",
+      "type": "Project Manager",
+      "rate": "75"
+    }
+  ]
+
