@@ -1,4 +1,5 @@
 ﻿using API.Interfaces;
+using API.DTO;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,7 @@ namespace API.Controllers
         /// </summary>
         /// <returns><see cref="IEnumerable{ProjectModel}"/></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProjectModel>>> GetAllProjects()
+        public async Task<ActionResult<IEnumerable<ProjectDto>>> GetAllProjects()
         {
           return Ok(await _projectDomain.GetAllProjects());
         }
@@ -50,15 +51,22 @@ namespace API.Controllers
         /// Creates a new project.  If there  is an exception saving the project, the Id field will be null.
         /// </summary>
         /// <param name="project"></param>
-        /// <returns><see cref="ActionResult{ProjectModel}"/></returns>
+        /// <returns><see cref="ActionResult{ProjectDto}"/></returns>
         [HttpPost]
-        public async Task<ActionResult<ProjectModel>> AddProject(ProjectModel project)
+        public async Task<ActionResult<ProjectDto>> AddProject(ProjectDto project)
         {
             if (project == null)
-                return BadRequest();
+                return BadRequest("There was a problem adding the project.  Ensure all required fields are provided");
 
-            await _projectDomain.AddProject(project);
-            return CreatedAtAction("GetProjectModel", new { id = project.Id }, project);
+            var result = await _projectDomain.AddProject(project);
+            if(result > 0)
+            {
+                return CreatedAtAction(nameof(AddProject), new { id = project.ProjectId }, project);
+            }
+            else
+            {
+                return BadRequest("There was a problem adding the project");
+            }
         }
 
         /// <summary>
@@ -66,7 +74,7 @@ namespace API.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns><see cref="IActionResult"/></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("{projectId}")]
         public async Task<IActionResult> DeleteProject(string projectId)
         {
             if (string.IsNullOrEmpty(projectId))

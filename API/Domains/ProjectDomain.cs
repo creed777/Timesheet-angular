@@ -1,30 +1,36 @@
 ﻿using API.Interfaces;
 using API.Models;
-using API.Services;
-using Microsoft.AspNetCore.Components;
+using API.DTO;
 
 namespace API.Domains
 {
     public class ProjectDomain : IProjectDomain
     {
         private IProjectDataService _tds { get; set; }
+        private IClientDataServices _cds { get; set; }
 
-        public ProjectDomain(IProjectDataService tds)
+        public ProjectDomain(IProjectDataService tds, IClientDataServices cds)
         {
             _tds = tds;
+            _cds = cds;
         }
 
-        public async Task<List<ProjectModel>> GetAllProjects()
+        public async Task<List<ProjectDto>> GetAllProjects()
         {
-            return await _tds.GetAllProjects();
+            var dbProject = await _tds.GetAllProjects();
+
+            List<ProjectDto> result = dbProject.ConvertAll<ProjectDto>(x => x);
+            return result;
         }
 
-        public async Task<ProjectModel> GetProject(string projectId)
+        public async Task<ProjectDto> GetProject(string projectId)
         {
             if(projectId == null)
-                return new ProjectModel();
+                return new ProjectDto();
 
-            return await _tds.GetProject(projectId);
+            var result = await _tds.GetProject(projectId);
+            ProjectDto dto = result;
+            return dto;
         }
 
         public async Task<List<ProjectStatusModel>> GetProjectStatusList()
@@ -32,11 +38,12 @@ namespace API.Domains
             return await _tds.GetProjectStatusList();
         }
 
-        public async Task<int> AddProject(ProjectModel project)
+        public async Task<int> AddProject(ProjectDto projectDto)
         {
-            if(project == null)
-                return 0;
+            if(projectDto == null)
+                return -1;
 
+            ProjectModel project = projectDto;
             return await _tds.AddProject(project);
         }
 

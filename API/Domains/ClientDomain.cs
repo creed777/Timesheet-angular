@@ -12,9 +12,8 @@ namespace API.Domains
             _tds = tds;
         }
 
-        public async Task<List<ClientModel>> GetClientAsync(string clientId)
+        public async Task<ClientModel> GetClientAsync(string clientId)
         {
-
             var result = await _tds.GetClientAsync(clientId);
             return result;
         }

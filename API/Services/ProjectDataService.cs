@@ -67,10 +67,14 @@ namespace API.Services
 
         public async Task<int> AddProject(ProjectModel project)
         {
-            await using var db = _dbFactory.CreateDbContext();
-
             if (project == null)
                 new ArgumentNullException(nameof(project));
+
+            await using var db = _dbFactory.CreateDbContext();
+            ProjectStatusModel status = await db.ProjectStatus.FirstOrDefaultAsync(x => x.Id == project.ProjectStatus.Id);
+            ClientModel client = await db.Client.FirstOrDefaultAsync(x => x.ClientId == project.Client.ClientId);
+            project.ProjectStatus = status;
+            project.Client = client;
 
             try
             {
@@ -94,7 +98,7 @@ namespace API.Services
                 return false;
             }
 
-            var projectModel = await db.Project.FindAsync(projectId);
+            var projectModel = await db.Project.FirstOrDefaultAsync(x => x.ProjectId == projectId);
             if (projectModel == null)
                 return false;
 

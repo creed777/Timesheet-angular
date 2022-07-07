@@ -1,20 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using API.DTO;
+﻿using API.Models;
 
-namespace API.Models
+namespace API.DTO
 {
-    public class ProjectModel
+    public class ProjectDto
     {
-        [Key]
-        public int Id { get; set; }
-        [Required]
-        public string ProjectId { get; set; }  
-        [Required]
+        public string ProjectId { get; set; } 
         public string ProjectName { get; set; } = string.Empty;
-        [Required]
         public string ProjectDescription { get; set; } = string.Empty;
-        [Required]
-        public virtual ClientModel Client { get; set; } = new ClientModel();
+        public string ClientId { get; set; }
         public uint? DivisionId { get; set; }
         public DateTime? EstimatedStartDate { get; set; }
         public DateTime? EstimatedEndDate { get; set; }
@@ -27,16 +20,22 @@ namespace API.Models
         public decimal? ActualLaborCost { get; set; }
         public decimal? EstimatedMaterialCost { get; set; }
         public decimal? ActualMaterialCost { get; set; }
-        public virtual ProjectStatusModel ProjectStatus { get; set; } = new ProjectStatusModel();
+        public uint ProjectStatusId { get; set; }
 
-        public static implicit operator ProjectDto(ProjectModel project)
+        public static implicit operator ProjectModel(ProjectDto project)
         {
-            return new ProjectDto
+            return new ProjectModel
             {
                 ProjectId = project.ProjectId,
                 ProjectName = project.ProjectName,
                 ProjectDescription = project.ProjectDescription,
-                ClientId = project.Client.ClientId,
+                Client = new ClientModel()
+                {
+                    ClientId = project.ClientId,
+                    //ClientName = ??,
+                    //ClientDescription = ??,
+                    //ClientStatus = ??
+                },
                 DivisionId = project.DivisionId,
                 EstimatedStartDate = project.EstimatedStartDate,
                 EstimatedEndDate = project.EstimatedEndDate,
@@ -48,7 +47,11 @@ namespace API.Models
                 ActualLaborCost = project.ActualLaborCost,
                 EstimatedMaterialCost = project.EstimatedMaterialCost,
                 ActualMaterialCost = project.EstimatedMaterialCost,
-                ProjectStatusId = project.ProjectStatus.Id
+                ProjectStatus = new ProjectStatusModel()
+                {
+                    Id = project.ProjectStatusId,
+
+                }
             };
         }
     }
