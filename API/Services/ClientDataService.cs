@@ -2,6 +2,7 @@
 using API.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace API.Services
 {
@@ -55,20 +56,22 @@ namespace API.Services
             }
         }
 
-        public async Task<List<ClientModel>> GetClientAsync(string clientId)
+        public async Task<ClientModel> GetClientAsync(string clientId)
         {
-            await using var db = _dbFactory.CreateDbContext();
             try
             {
-                return await db.Client
+                await using var db = _dbFactory.CreateDbContext();
+                var result = await db.Client
                     .Where(x => x.ClientId == clientId)
                     .AsNoTracking()
-                    .ToListAsync();
+                    .FirstOrDefaultAsync();
+                return result;
             }
-            catch (Exception ex)
+            catch (DbUpdateException ex)
             {
+                Debug.WriteLine(ex.Message);
                 _logger.LogCritical(ex.Message);
-                return new List<ClientModel>();
+                return null;
             }
         }
 
@@ -115,6 +118,14 @@ namespace API.Services
                 _logger.LogCritical(ex.Message);
                 return -1;
             }
+        }
+
+        public async Task<List<ClientStatusModel>> GetClientStatusListAsync()
+        {
+            await using var db = _dbFactory.CreateDbContext();
+
+            return await db.ClientStatus
+                .ToListAsync();
         }
     }
 }

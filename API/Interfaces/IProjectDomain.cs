@@ -1,13 +1,14 @@
 ﻿using API.Models;
+using API.DTO;
 
 namespace API.Interfaces
 {
     public interface IProjectDomain
     {
-        Task<List<ProjectModel>> GetAllProjects();
-        Task<ProjectModel> GetProject(string projectId);
+        Task<List<ProjectDto>> GetAllProjects();
+        Task<ProjectDto> GetProject(string projectId);
         Task<List<ProjectStatusModel>> GetProjectStatusList();
-        Task<int> AddProject(ProjectModel project);
+        Task<int> AddProject(ProjectDto project);
         Task<bool> DeleteProject(string projectId);
     }
 }
