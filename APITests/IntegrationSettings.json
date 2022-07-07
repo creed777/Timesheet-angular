@@ -1,0 +1,5 @@
+{
+  "Connection String": {
+    "DefaultConnection" : "Server=(localdb)\\Timesheet;Database=ApiTest;Trusted_Connection=True;MultipleActiveResultSets=True;"
+  }
+}
