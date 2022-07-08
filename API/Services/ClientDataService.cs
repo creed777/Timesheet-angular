@@ -77,17 +77,27 @@ namespace API.Services
 
         public async Task<int> AddClientAsync(ClientModel client)
         {
-           await using var db = _dbFactory.CreateDbContext();
 
             if (client == null)
-               _logger.LogDebug(new ArgumentNullException(nameof(client)).ToString());
+            {
+                _logger.LogDebug(new ArgumentNullException(nameof(client)).ToString());
+                return 0;
+            }
                 
             try
             {
+                await using var db = _dbFactory.CreateDbContext();
+
+                var status = await db.ClientStatus
+                    .Where(x => x.Id == client.ClientStatus.Id)
+                    .SingleOrDefaultAsync();
+
+                client.ClientStatus = status;
+
                 await db.Client.AddAsync(client);
                 return await db.SaveChangesAsync();
             }
-            catch (DbUpdateException ex)
+            catch (Exception ex)
             {
                 _logger.LogCritical(ex.Message);
                 return -1;
@@ -103,15 +113,17 @@ namespace API.Services
                 _logger.LogError(new ArgumentNullException(nameof(clientId)).ToString());
                 return -1;
             }
+                var clientModel = await db.Client
+                    .Where(x => x.ClientId == clientId)
+                    .FirstOrDefaultAsync();
 
-            var clientModel = await db.Project.FindAsync(clientId);
-            if (clientModel == null)
-                return -1;
-
+                if (clientModel == null)
+                    return -1;
             try
             {
-                db.Project.Remove(clientModel);
-                return await db.SaveChangesAsync();
+                db.Client.Remove(clientModel);
+                var result = await db.SaveChangesAsync();
+                return result;
             }
             catch (DbUpdateException ex)
             {

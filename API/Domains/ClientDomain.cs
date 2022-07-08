@@ -1,5 +1,6 @@
 ﻿using API.Interfaces;
 using API.Models;
+using API.DTO;
 
 namespace API.Domains
 {
@@ -12,20 +13,27 @@ namespace API.Domains
             _tds = tds;
         }
 
-        public async Task<ClientModel> GetClientAsync(string clientId)
+        public async Task<ClientDto> GetClientAsync(string clientId)
         {
             var result = await _tds.GetClientAsync(clientId);
-            return result;
+
+            var dtoMapped = result;
+            return dtoMapped;
         }
 
-        public async Task<List<ClientModel>> GetAllClientsAsync()
+        public async Task<List<ClientDto>> GetAllClientsAsync()
         {
-            return await _tds.GetAllClientsAsync();
+            var result = await _tds.GetAllClientsAsync();
+
+            List<ClientDto> dtoMapped = result.ConvertAll<ClientDto>(x => x);
+            return dtoMapped;
         }
 
-        public async Task<int> AddClientAsync(ClientModel client)
+        public async Task<int> AddClientAsync(ClientDto client)
         {
-            return await _tds.AddClientAsync(client);
+            ClientModel clientModel = client;
+
+            return await _tds.AddClientAsync(clientModel);
         }
 
         public async Task<int> DeleteClient(string clientId)
@@ -33,5 +41,9 @@ namespace API.Domains
             return await _tds.DeleteClient(clientId);
         }
 
+        public async Task<List<ClientStatusModel>> GetClientStatusListAsync()
+        {
+            return await _tds.GetClientStatusListAsync();
+        }
     }
 }
