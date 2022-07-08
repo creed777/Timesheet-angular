@@ -1,1 +1,86 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+body {
+  font-family: Arial;
+  font-size: 18px;
+}
+
+code {
+  color: #e01a76;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+  border-radius: 6px;
+  width: 100px;
+}
+
+fieldset {
+  margin-bottom: 2em !important;
+  border: 1px solid #666 !important;
+  padding: 10px !important;
+}
+
+legend {
+  padding: 1px 10px !important;
+  float: none;
+  width: auto;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.primary-color {
+  color: #bad739;
+}
+
+.secondary-color {
+  color: #00baae
+}
+
+/* when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+
+input[type="text"], [type="number"], textarea, select {
+  width: 75%;
+}
+
+input[type="number"] {
+  width: 40%;
+}
+
+input[type="checkbox"] {
+  width: 50px;
+  transform: scale(1.7);
+}
+
+.container {
+  justify-content: space-between;
+}
