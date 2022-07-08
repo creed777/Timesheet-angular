@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using API.DTO;
 
 namespace API.Models
 {
@@ -13,5 +14,16 @@ namespace API.Models
         [Required]
         public string ClientDescription { get; set; } = default!;
         public virtual ClientStatusModel ClientStatus { get; set; } = new ClientStatusModel();
+
+        public static implicit operator ClientDto(ClientModel client)
+        {
+            return new ClientDto()
+            {
+                ClientId = client.ClientId,
+                ClientName = client.ClientName,
+                ClientDescription = client.ClientDescription,
+                ClientStatusId = client.ClientStatus.Id
+            };
+        }
     }
 }

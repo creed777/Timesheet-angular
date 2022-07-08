@@ -32,9 +32,6 @@ namespace API.DTO
                 Client = new ClientModel()
                 {
                     ClientId = project.ClientId,
-                    //ClientName = ??,
-                    //ClientDescription = ??,
-                    //ClientStatus = ??
                 },
                 DivisionId = project.DivisionId,
                 EstimatedStartDate = project.EstimatedStartDate,
