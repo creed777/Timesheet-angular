@@ -13,9 +13,9 @@ namespace API.Domains
             _tds = tds;
         }
 
-        public async Task<ClientDto> GetClientAsync(string clientId)
+        public async Task<ClientDto> GetClientByIdAsync(string clientId)
         {
-            var result = await _tds.GetClientAsync(clientId);
+            var result = await _tds.GetClientByIdAsync(clientId);
 
             var dtoMapped = result;
             return dtoMapped;

@@ -1,12 +1,13 @@
-﻿using API.Models;
+﻿using API.DTO;
 
 namespace API.Interfaces
 {
     public interface IResourceDomain
     {
-        Task<List<ResourceModel>> GetAllResourcesAsync();
-        Task<ResourceModel> GetResourceAsync(string resourceId);
-        Task<int> AddResourceAsync(ResourceModel resource);
+        Task<List<ResourceDto>> GetResourcesByTypeAsync(string resourceTypeName);
+        Task<List<ResourceTypeDto>> GetResourceTypeList();
+        Task<ResourceDto> GetResourceByIdAsync(string resourceId);
+        Task<int> AddResourceAsync(ResourceDto resource);
         Task<int> DeleteResourceAsync(string resourceId);
     }
 }

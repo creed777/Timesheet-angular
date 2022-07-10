@@ -37,11 +37,11 @@ namespace API.Controllers
         ///     GET /API/Project/GetProject/{projectId}
         ///
         /// </remarks>
-        [HttpGet("{id}")]
+        [HttpGet("{projectId}")]
         public async Task<ActionResult<ProjectModel>> GetProject(string projectId)
         {
             if (projectId == null)
-                return BadRequest();
+                return BadRequest("Project id cannot be null");
 
             return Ok(await _projectDomain.GetProject(projectId));
 
@@ -56,7 +56,7 @@ namespace API.Controllers
         public async Task<ActionResult<ProjectDto>> AddProject(ProjectDto project)
         {
             if (project == null)
-                return BadRequest("There was a problem adding the project.  Ensure all required fields are provided");
+                return BadRequest(new ArgumentNullException("project"));
 
             var result = await _projectDomain.AddProject(project);
             if(result > 0)
@@ -70,7 +70,7 @@ namespace API.Controllers
         }
 
         /// <summary>
-        /// Hard-deletes a project.
+        /// Hard deletes a project.
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns><see cref="IActionResult"/></returns>
@@ -80,13 +80,15 @@ namespace API.Controllers
             if (string.IsNullOrEmpty(projectId))
                 return BadRequest();
 
-            var project = await _projectDomain.GetProject(projectId);
-            if (project == null)
+            var result = await _projectDomain.DeleteProject(projectId);
+            if(result != -1)
             {
-                return NoContent();
+                return Ok(await _projectDomain.DeleteProject(projectId));
             }
-
-            return Ok(await _projectDomain.DeleteProject(projectId));
+            else
+            {
+                return BadRequest("There was a problem deleting the project");
+            }    
         }
     }
 }

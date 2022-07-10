@@ -43,10 +43,19 @@ namespace API.Services
         public async Task<ProjectModel> GetProject(string projectId)
         {
             await using var db = _dbFactory.CreateDbContext();
-            return await db.Project
+            var result = await db.Project
                 .AsNoTracking()
                 .Where(p => p.ProjectId == projectId)
                 .FirstOrDefaultAsync();
+
+            if(result != null)
+            {
+                return result;
+            }
+            else
+            {
+                return new ProjectModel();
+            }
         }
 
         public async Task<List<ProjectModel>> GetAllProjects()
@@ -88,30 +97,29 @@ namespace API.Services
             }
         }
 
-        public async Task<bool> DeleteProject(string projectId)
+        public async Task<int> DeleteProject(string projectId)
         {
             await using var db = _dbFactory.CreateDbContext();
 
             if (string.IsNullOrEmpty(projectId))
             {
                 _logger.LogError(new ArgumentNullException(nameof(projectId)).ToString());
-                return false;
+                return -1;
             }
 
             var projectModel = await db.Project.FirstOrDefaultAsync(x => x.ProjectId == projectId);
             if (projectModel == null)
-                return false;
+                return -1;
 
             try
             {
                 db.Project.Remove(projectModel);
-                await db.SaveChangesAsync();
-                return true;
+                return await db.SaveChangesAsync();
             }
             catch(DbUpdateException ex)
             {
                 _logger.LogCritical(ex.Message);
-                return false;
+                return -1;
             }
         }
     }

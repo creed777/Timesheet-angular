@@ -36,9 +36,9 @@ namespace API.Controllers
         public async Task<ActionResult<ClientDto>> GetClient(string clientId)
         {
             if (string.IsNullOrEmpty(clientId))
-                return BadRequest("The client id cannot be null");
+                return BadRequest(new ArgumentNullException(clientId));
 
-            return Ok(await _clientDomain.GetClientAsync(clientId));
+            return Ok(await _clientDomain.GetClientByIdAsync(clientId));
         }
 
         /// <summary>
@@ -50,7 +50,9 @@ namespace API.Controllers
         public async Task<ActionResult> AddClient(ClientDto client)
         {
             var result = await _clientDomain.AddClientAsync(client);
-             
+
+            if (client == null)
+                BadRequest(new ArgumentNullException("client"));
 
             if (result > 0)
             {
@@ -72,11 +74,15 @@ namespace API.Controllers
         public async Task<IActionResult> DeleteClient(string clientId)
         {
             if(string.IsNullOrEmpty(clientId))
-                return BadRequest("The client id cannot be null");
+                return BadRequest(new ArgumentNullException(clientId));
 
             return Ok( await _clientDomain.DeleteClient(clientId));
         }
 
+        /// <summary>
+        /// Get a list of Client Status
+        /// </summary>
+        /// <returns><see cref="ActionResult{ClientStatusModel}"/></returns>
         [HttpGet]
         public async Task<IActionResult> GetClientStatusListAsync()
         {

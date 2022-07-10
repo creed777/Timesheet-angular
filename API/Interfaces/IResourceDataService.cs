@@ -4,8 +4,9 @@ namespace API.Interfaces
 {
     public interface IResourceDataService
     {
-        Task<ResourceModel> GetResourceAsync(string resourceId);
-        Task<List<ResourceModel>> GetAllResourcesAsync();
+        Task<List<ResourceModel>> GetResourcesByTypeAsync(string resourceTypeName);
+        Task<List<ResourceTypeModel>> GetResourceTypeList();
+        Task<ResourceModel> GetResourceByIdAsync(string resourceId);
         Task<int> AddResourceAsync(ResourceModel resource);
         Task<int> DeleteResourceAsync(string resourceId);
     }

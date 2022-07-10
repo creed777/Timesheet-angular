@@ -1,4 +1,5 @@
 ﻿using API.Interfaces;
+using API.DTO;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,26 +19,42 @@ namespace API.Controllers
             _resourceDomain = projectDomain;
         }
 
-        // GET: api/Resource
         /// <summary>
-        /// Returns all active project resources
+        /// Get resource type list
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see cref="IActionResult"/></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ResourceModel>>> GetAllProjectResources()
+        public async Task<ActionResult<List<ResourceTypeDto>>> GetResourceTypeList()
         {
-            return await _resourceDomain.GetAllResourcesAsync();
+            return await _resourceDomain.GetResourceTypeList();
         }
 
-        // GET: api/Resource/5
-        [HttpGet("{projectId}")]
-        public async Task<ActionResult<ResourceModel>> GetResourceModel(string resourceId)
+        /// <summary>
+        /// Returns all active project resources fo the given type
+        /// </summary>
+        /// <returns><see cref="IEnumerable{ResourceDto}"/></returns>
+        [HttpGet("{resourceTypeName}")]
+        public async Task<ActionResult<IEnumerable<ResourceDto>>> GetResourcesByTypeAsync(string resourceTypeName)
+        {
+            if(resourceTypeName == null)
+                return BadRequest(new ArgumentNullException(resourceTypeName));
+
+            return await _resourceDomain.GetResourcesByTypeAsync(resourceTypeName);
+        }
+
+        /// <summary>
+        /// Get a resurce by id
+        /// </summary>
+        /// <param name="resourceId"></param>
+        /// <returns><see cref="ActionResult{ResourceModel}"/></returns>
+        [HttpGet("{resourceId}")]
+        public async Task<ActionResult<ResourceDto>> GetResourceByIdAsync(string resourceId)
         {
             if (string.IsNullOrEmpty(resourceId))
                 return BadRequest(new ArgumentNullException(resourceId));
 
-            var resourceModel = await _resourceDomain.GetResourceAsync(resourceId);
-            return resourceModel;
+            var resource = await _resourceDomain.GetResourceByIdAsync(resourceId);
+            return resource;
         }
 
         //// PUT: api/Resource/5
@@ -71,26 +88,49 @@ namespace API.Controllers
         //    return NoContent();
         //}
 
-        // POST: api/Resource
+        /// <summary>
+        /// Add a new resource
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns><see cref="ActionResult{TValue}"/></returns>
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<int>> AddResourceAsync(ResourceModel resource)
+        [HttpPost("resource")]
+        public async Task<ActionResult> AddResourceAsync(ResourceDto resource)
         {
             if (resource == null)
                 return BadRequest(new ArgumentNullException());
 
-            return await _resourceDomain.AddResourceAsync(resource);
+            var result = await _resourceDomain.AddResourceAsync(resource);
+            if (result != -1)
+            {
+                return CreatedAtAction(nameof(AddResourceAsync), new { id = resource.ResourceId }, resource);
+            }
+            else
+            {
+                return BadRequest("There was a problem adding the project");
+            }
         }
 
-        // DELETE: api/Resource/5
+        /// <summary>
+        /// Hard deletes a resource
+        /// </summary>
+        /// <param name="resourceId"></param>
+        /// <returns><see cref="IActionResult"/></returns>
         [HttpDelete("{resourceId}")]
         public async Task<IActionResult> DeleteResource(string resourceId)
         {
             if (string.IsNullOrEmpty(resourceId))
                 return BadRequest(new ArgumentNullException(resourceId));
 
-            await _resourceDomain.DeleteResourceAsync(resourceId);
-            return NoContent();
+            var result = await _resourceDomain.DeleteResourceAsync(resourceId);
+            if(result != -1)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("There was an error deleting the resource");
+            }
         }
     }
 }
