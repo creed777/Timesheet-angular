@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.SqlServer.Types;
 
 namespace API.Models
 {
@@ -12,6 +13,10 @@ namespace API.Models
         public DbSet<ResourceModel> ProjectResources { get; set; } = default!;
         public DbSet<ResourceTypeModel> ResourceTypes { get; set; } = default!;
         public DbSet<ResourceStatusModel> ResourceStatus { get; set; } = default!;
+        public DbSet<TaskModel> ProjectTask { get; set; } = default!;
+        public DbSet<TaskResourceModel> TaskResource { get; set; } = default!;
+        public DbSet<TaskStatusModel> TaskStatus { get; set; } = default!;
+        public DbSet<TaskTimeModel> TaskTime { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,17 +40,31 @@ namespace API.Models
             modelBuilder.Entity<ProjectModel>()
                 .Property(x => x.EstimatedMaterialCost)
                 .HasPrecision(7, 4);
-
+            modelBuilder.Entity<ProjectModel>()
+                .HasMany(s => s.Task);
             modelBuilder.Entity<ProjectModel>()
                 .HasOne(p => p.ProjectStatus);
+
             modelBuilder.Entity<ClientModel>()
                 .HasOne(x => x.ClientStatus);
+
+            modelBuilder.Entity<ResourceModel>()
+                .HasNoKey();
             modelBuilder.Entity<ResourceModel>()
                 .HasOne(s => s.ResourceStatus);
             modelBuilder.Entity<ResourceModel>()
                 .HasOne(s => s.ResourceType);
-        }
 
+            modelBuilder.Entity<TaskModel>()
+                .HasMany(s => s.TaskTime);
+            modelBuilder.Entity<TaskModel>()
+                .HasMany(s => s.TaskResource);
+            modelBuilder.Entity<TaskModel>()
+                .HasMany(s => s.TaskStatus);
+            modelBuilder.Entity<TaskModel>()
+                .Property(e => e.Level)
+                .HasColumnName("Level");
+        }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
@@ -65,7 +84,7 @@ namespace API.Models
 
             var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
 
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), configuration => { configuration.UseHierarchyId(); });
 
             return new DatabaseContext(optionsBuilder.Options);
         }

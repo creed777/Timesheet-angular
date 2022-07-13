@@ -17,12 +17,12 @@ namespace API.Domains
             return await _tds.GetAllResourcesAsync();
         }
 
-        public async Task<ResourceModel> GetResourceAsync(string resourceId)
+        public async Task<ResourceModel> GetResourceByIdAsync(string resourceId)
         {
             if (resourceId == null)
                 return new ResourceModel();
 
-            return await _tds.GetResourceAsync(resourceId);
+            return await _tds.GetResourceByIdAsync(resourceId);
         }
 
         public async Task<int> AddResourceAsync(ResourceModel resource)

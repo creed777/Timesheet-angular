@@ -40,16 +40,21 @@ namespace API.Services
 
         }
 
-        public async Task<ResourceModel> GetResourceAsync(string resourceId)
+        public async Task<ResourceModel> GetResourceByIdAsync(string resourceId)
         {
             await using var db = _dbFactory.CreateDbContext();
 
             try
             {
-                return await db.ProjectResources
+                var result = await db.ProjectResources
                     .AsNoTracking()
                     .Where(p => p.ResourceId == resourceId)
                     .FirstOrDefaultAsync();
+                if(result ==  null)
+                {
+                    return new ResourceModel();
+                }
+                return result;
             }
             catch(Exception ex)
             {
@@ -65,8 +70,6 @@ namespace API.Services
             try
             {
                 var result = await db.ProjectResources
-                    .AsQueryable()
-                    .Where(x => x.ResourceType.Name == resourceTypeName)
                     .AsNoTracking()
                     .ToListAsync();
 

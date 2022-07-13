@@ -30,13 +30,13 @@ namespace API.Controllers
         }
 
         // GET: api/Resource/5
-        [HttpGet("{projectId}")]
-        public async Task<ActionResult<ResourceModel>> GetResourceModel(string resourceId)
+        [HttpGet("{resourceId}")]
+        public async Task<ActionResult<ResourceModel>> GetResourceById(string resourceId)
         {
             if (string.IsNullOrEmpty(resourceId))
                 return BadRequest(new ArgumentNullException(resourceId));
 
-            var resourceModel = await _resourceDomain.GetResourceAsync(resourceId);
+            var resourceModel = await _resourceDomain.GetResourceByIdAsync(resourceId);
             return resourceModel;
         }
 

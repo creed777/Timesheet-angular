@@ -1,6 +1,6 @@
-using ProjectAPI.Interfaces;
-using ProjectAPI.DatabaseModels;
-using ProjectAPI.Services;
+using API.Interfaces;
+using API.Models;
+using API.Services;
 using APITests.BogusData;
 using FluentAssertions;
 using System.Net;
