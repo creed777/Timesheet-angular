@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using API.Models;
 using API.Interfaces;
+using System.Diagnostics;
 
 namespace API.Services
 {
@@ -63,13 +64,31 @@ namespace API.Services
 
             try
             {
-                return await db.ProjectResources
+                var result = await db.ProjectResources
+                    .AsQueryable()
+                    .Where(x => x.ResourceType.Name == resourceTypeName)
                     .AsNoTracking()
                     .ToListAsync();
+
+                Debug.WriteLine(result.Count().ToString());
+
+                if (result != null)
+                {
+                    Debug.WriteLine(result.Count().ToString());
+                    return result;
+                }
+                else
+                {
+                    Debug.WriteLine(result.Count().ToString());
+                    return new List<ResourceModel>();
+                }
+                
             }
             catch(Exception ex)
             {
                 _logger.LogCritical(ex.Message);
+
+                Debug.WriteLine(ex.Message);
                 return new List<ResourceModel>();
             }
         }
