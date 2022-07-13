@@ -56,7 +56,7 @@ namespace API.Services
             }
         }
 
-        public async Task<ClientModel> GetClientAsync(string clientId)
+        public async Task<ClientModel> GetClientByIdAsync(string clientId)
         {
             try
             {
@@ -65,7 +65,15 @@ namespace API.Services
                     .Where(x => x.ClientId == clientId)
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
-                return result;
+
+                if (result != null)
+                {
+                    return result;
+                }
+                else 
+                { 
+                    return new ClientModel();
+                }
             }
             catch (DbUpdateException ex)
             {

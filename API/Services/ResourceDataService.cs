@@ -46,9 +46,9 @@ namespace API.Services
 
             try
             {
-                var result = await db.ProjectResources
-                    .AsNoTracking()
+                return await db.ProjectResources
                     .Where(p => p.ResourceId == resourceId)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync();
                 if(result ==  null)
                 {
@@ -63,29 +63,45 @@ namespace API.Services
             }
         }
 
-        public async Task<List<ResourceModel>> GetAllResourcesAsync()
+        public async Task<List<ResourceTypeModel>> GetResourceTypeList()
         {
+            try
+            {
+                await using var db = _dbFactory.CreateDbContext();
+
+                return await db.ResourceTypes
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                return new List<ResourceTypeModel>();
+            }
+        }
+
+        public async Task<List<ResourceModel>> GetResourcesByTypeAsync(string resourceTypeName)
+        {
+            if(string.IsNullOrEmpty(resourceTypeName))
+                new ArgumentNullException(nameof(resourceTypeName));
+
             await using var db = _dbFactory.CreateDbContext();
 
             try
             {
                 var result = await db.ProjectResources
+                    .Where(x => x.ResourceType.Name == resourceTypeName)
                     .AsNoTracking()
                     .ToListAsync();
 
-                Debug.WriteLine(result.Count().ToString());
-
                 if (result != null)
                 {
-                    Debug.WriteLine(result.Count().ToString());
                     return result;
                 }
                 else
                 {
-                    Debug.WriteLine(result.Count().ToString());
                     return new List<ResourceModel>();
                 }
-                
             }
             catch(Exception ex)
             {

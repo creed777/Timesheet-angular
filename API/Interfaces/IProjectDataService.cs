@@ -8,6 +8,6 @@ namespace API.Interfaces
         Task<List<ProjectModel>> GetAllProjects();
         Task<List<ProjectStatusModel>> GetProjectStatusList();
         Task<int> AddProject(ProjectModel project);
-        Task<bool> DeleteProject(string projectId);
+        Task<int> DeleteProject(string projectId);
     }
 }

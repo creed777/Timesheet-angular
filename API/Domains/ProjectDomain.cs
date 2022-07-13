@@ -47,10 +47,10 @@ namespace API.Domains
             return await _tds.AddProject(project);
         }
 
-        public async Task<bool> DeleteProject(string projectId)
+        public async Task<int> DeleteProject(string projectId)
         {
             if(projectId == null)
-                return false;
+                return -1;
 
             return await _tds.DeleteProject(projectId);
         }
