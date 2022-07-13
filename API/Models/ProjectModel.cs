@@ -28,6 +28,7 @@ namespace API.Models
         public decimal? EstimatedMaterialCost { get; set; }
         public decimal? ActualMaterialCost { get; set; }
         public virtual ProjectStatusModel ProjectStatus { get; set; } = new ProjectStatusModel();
+        public ICollection<TaskModel> Task { get; set; }
 
         public static implicit operator ProjectDto(ProjectModel project)
         {

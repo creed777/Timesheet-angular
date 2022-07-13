@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using API.Models;
 using API.Interfaces;
+using System.Diagnostics;
 
 namespace API.Services
 {
@@ -49,6 +50,11 @@ namespace API.Services
                     .Where(p => p.ResourceId == resourceId)
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
+                if(result ==  null)
+                {
+                    return new ResourceModel();
+                }
+                return result;
             }
             catch(Exception ex)
             {
@@ -100,6 +106,8 @@ namespace API.Services
             catch(Exception ex)
             {
                 _logger.LogCritical(ex.Message);
+
+                Debug.WriteLine(ex.Message);
                 return new List<ResourceModel>();
             }
         }

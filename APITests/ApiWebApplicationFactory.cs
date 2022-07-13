@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 using APITests.BogusData;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace APITests
 {
