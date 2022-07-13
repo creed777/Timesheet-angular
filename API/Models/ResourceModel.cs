@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using API.DTO;
 
 namespace API.Models
 {
@@ -36,5 +37,17 @@ namespace API.Models
         /// </summary>
         [Required]
         public ResourceStatusModel ResourceStatus { get; set; }
+
+        public static implicit operator ResourceDto(ResourceModel resource)
+        {
+            return new ResourceDto()
+            {
+                ResourceId = resource.ResourceId,
+                FirstName = resource.FirstName,
+                LastName = resource.LastName,
+                ResourceStatusName = resource.ResourceStatus.StatusName,
+                ResourceTypeName = resource.ResourceType.Name
+            };
+        }
     }
 }

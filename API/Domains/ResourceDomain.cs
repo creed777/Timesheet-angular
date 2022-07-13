@@ -1,5 +1,6 @@
 ﻿using API.Interfaces;
 using API.Models;
+using API.DTO;
 
 namespace API.Domains
 {
@@ -12,25 +13,38 @@ namespace API.Domains
             _tds = tds;
         }
 
-        public async Task<List<ResourceModel>> GetAllResourcesAsync()
+        public async Task<List<ResourceDto>> GetResourcesByTypeAsync(string resourceTypeName)
         {
-            return await _tds.GetAllResourcesAsync();
+            if (resourceTypeName == null)
+                return null;
+
+            var result = await _tds.GetResourcesByTypeAsync(resourceTypeName);
+            List<ResourceDto> mapping = result.ConvertAll<ResourceDto>(x => x);
+            return mapping;
         }
 
-        public async Task<ResourceModel> GetResourceAsync(string resourceId)
+        public async Task<List<ResourceTypeDto>> GetResourceTypeList()
+        {
+            var result = await _tds.GetResourceTypeList();
+            List<ResourceTypeDto> mapping = result.ConvertAll<ResourceTypeDto>(x => x);
+            return mapping;
+        }
+
+        public async Task<ResourceDto> GetResourceByIdAsync(string resourceId)
         {
             if (resourceId == null)
                 return new ResourceModel();
 
-            return await _tds.GetResourceAsync(resourceId);
+            return await _tds.GetResourceByIdAsync(resourceId);
         }
 
-        public async Task<int> AddResourceAsync(ResourceModel resource)
+        public async Task<int> AddResourceAsync(ResourceDto resource)
         {
             if (resource == null)
                 return -1;
 
-            return await _tds.AddResourceAsync(resource);
+            ResourceModel mapping = resource;
+            return  await _tds.AddResourceAsync(mapping);
         }
 
         public async Task<int> DeleteResourceAsync(string resourceId)

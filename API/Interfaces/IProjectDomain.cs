@@ -9,6 +9,6 @@ namespace API.Interfaces
         Task<ProjectDto> GetProject(string projectId);
         Task<List<ProjectStatusModel>> GetProjectStatusList();
         Task<int> AddProject(ProjectDto project);
-        Task<bool> DeleteProject(string projectId);
+        Task<int> DeleteProject(string projectId);
     }
 }
