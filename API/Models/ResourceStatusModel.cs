@@ -8,5 +8,7 @@ namespace API.Models
         public uint Id { get; set; }
         [Required]
         public string StatusName { get; set; }
+        public int ResourceId { get; set; }
+        public ICollection<ResourceModel> Resource { get; set; }
     }
 }

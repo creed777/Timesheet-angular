@@ -13,10 +13,12 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<IResourceDataService, ResourceDataService>();
 builder.Services.AddSingleton<IClientDataServices, ClientDataService>();
 builder.Services.AddSingleton<IProjectDataService,ProjectDataService>();
+builder.Services.AddSingleton<ITaskDataService, TaskDataService>();
 //add domains
 builder.Services.AddSingleton<IResourceDomain, ResourceDomain>();
 builder.Services.AddSingleton<IClientDomain, ClientDomain>();
 builder.Services.AddSingleton<IProjectDomain, ProjectDomain>();
+builder.Services.AddSingleton<ITaskDomain, TaskDomain>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

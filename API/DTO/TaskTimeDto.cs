@@ -1,16 +1,16 @@
-﻿using API.DTO;
+﻿using API.Models;
 
-namespace API.Models
+namespace API.DTO
 {
-    public class TaskTimeModel
+    public class TaskTimeDto
     {
         public int Id { get; set; }
         public int TaskId { get; set; }
         public Decimal Time { get; set; }
 
-        public static implicit operator TaskTimeDto(TaskTimeModel task)
+        public static implicit operator TaskTimeModel(TaskTimeDto task)
         {
-            return new TaskTimeDto()
+            return new TaskTimeModel()
             {
                 Id = task.Id,
                 TaskId = task.TaskId,

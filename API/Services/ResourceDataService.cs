@@ -46,10 +46,11 @@ namespace API.Services
 
             try
             {
-                return await db.ProjectResources
+               var result = await db.Resource
                     .Where(p => p.ResourceId == resourceId)
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
+
                 if(result ==  null)
                 {
                     return new ResourceModel();
@@ -89,7 +90,7 @@ namespace API.Services
 
             try
             {
-                var result = await db.ProjectResources
+                var result = await db.Resource
                     .Where(x => x.ResourceType.Name == resourceTypeName)
                     .AsNoTracking()
                     .ToListAsync();
@@ -121,7 +122,7 @@ namespace API.Services
 
             try
             {
-                await db.ProjectResources.AddAsync(resource);
+                await db.Resource.AddAsync(resource);
                 return await db.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -141,13 +142,13 @@ namespace API.Services
                 return -1;
             }
 
-            var resource = await db.ProjectResources.FindAsync(resourceId);
+            var resource = await db.Resource.FindAsync(resourceId);
             if (resource == null)
                 return -1;
 
             try
             {
-                db.ProjectResources.Remove(resource);
+                db.Resource.Remove(resource);
                 return await db.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
