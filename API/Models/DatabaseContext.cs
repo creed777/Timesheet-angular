@@ -10,11 +10,10 @@ namespace API.Models
         public DbSet<ClientStatusModel> ClientStatus { get; set; } = default!;
         public DbSet<ProjectModel> Project { get; set; } = default!;
         public DbSet<ProjectStatusModel> ProjectStatus { get; set; } = default!;
-        public DbSet<ResourceModel> ProjectResources { get; set; } = default!;
+        public DbSet<ResourceModel> Resource { get; set; } = default!;
         public DbSet<ResourceTypeModel> ResourceTypes { get; set; } = default!;
         public DbSet<ResourceStatusModel> ResourceStatus { get; set; } = default!;
-        public DbSet<TaskModel> ProjectTask { get; set; } = default!;
-        public DbSet<TaskResourceModel> TaskResource { get; set; } = default!;
+        public DbSet<TaskModel> Task { get; set; } = default!;
         public DbSet<TaskStatusModel> TaskStatus { get; set; } = default!;
         public DbSet<TaskTimeModel> TaskTime { get; set; } = default!;
 
@@ -40,30 +39,39 @@ namespace API.Models
             modelBuilder.Entity<ProjectModel>()
                 .Property(x => x.EstimatedMaterialCost)
                 .HasPrecision(7, 4);
-            modelBuilder.Entity<ProjectModel>()
-                .HasMany(s => s.Task);
-            modelBuilder.Entity<ProjectModel>()
-                .HasOne(p => p.ProjectStatus);
+            modelBuilder.Entity<TaskTimeModel>()
+                .Property(x => x.Time)
+                .HasPrecision(7, 4);
+            modelBuilder.Entity<ResourceTypeModel>()
+                .Property(x => x.Cost)
+                .HasPrecision(7, 4);
 
-            modelBuilder.Entity<ClientModel>()
-                .HasOne(x => x.ClientStatus);
+            //modelBuilder.Entity<ProjectModel>()
+            //    .HasMany(s => s.Task);
+            //modelBuilder.Entity<ProjectModel>()
+            //    .HasOne(p => p.ProjectStatus);
+            //modelBuilder.Entity<ProjectModel>()
+            //    .HasMany(p => p.Resource);
+            //modelBuilder.Entity<ProjectModel>()
+            //    .HasOne(p => p.Client);
 
-            modelBuilder.Entity<ResourceModel>()
-                .HasNoKey();
-            modelBuilder.Entity<ResourceModel>()
-                .HasOne(s => s.ResourceStatus);
-            modelBuilder.Entity<ResourceModel>()
-                .HasOne(s => s.ResourceType);
+            //modelBuilder.Entity<ClientModel>()
+            //    .HasOne(x => x.ClientStatus);
 
-            modelBuilder.Entity<TaskModel>()
-                .HasMany(s => s.TaskTime);
-            modelBuilder.Entity<TaskModel>()
-                .HasMany(s => s.TaskResource);
-            modelBuilder.Entity<TaskModel>()
-                .HasMany(s => s.TaskStatus);
-            modelBuilder.Entity<TaskModel>()
-                .Property(e => e.Level)
-                .HasColumnName("Level");
+            //modelBuilder.Entity<ResourceModel>()
+            //    .HasOne(s => s.ResourceStatus);
+            //modelBuilder.Entity<ResourceModel>()
+            //    .HasOne(s => s.ResourceType);
+
+            //modelBuilder.Entity<TaskModel>()
+            //    .HasMany(s => s.TaskTime);
+            //modelBuilder.Entity<TaskModel>()
+            //    .HasMany(s => s.Resource);
+            //modelBuilder.Entity<TaskModel>()
+            //    .HasOne(s => s.TaskStatus);
+           // modelBuilder.Entity<TaskModel>()
+                //.Property(e => e.Level)
+                //.HasColumnName("Level");
         }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)

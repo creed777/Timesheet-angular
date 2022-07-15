@@ -1,31 +1,25 @@
-﻿
-using API.DTO;
-using System.ComponentModel.DataAnnotations;
+﻿using API.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
 
-
-namespace API.Models
+namespace API.DTO
 {
-    public class TaskModel
+    public class TaskDto
     {
-        [Key]
         public int Id { get; set; }
+        public int ProjectId { get; set; }
         public string TaskName { get; set; }
         public string TaskDescription { get; set; }
         public DateTime? EstimatedStartDate { get; set; }
         public DateTime? EstimatedEndDate { get; set; }
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
-        public virtual TaskStatusModel TaskStatus { get; set; }
-        public virtual ICollection<TaskTimeModel> TaskTime { get; set; }
-        public virtual ICollection<ResourceModel> Resource { get; set; }
-        public int ProjectId { get; set; }
-        public ProjectModel Project { get; set; }
+        public string TaskStatusName { get; set; }
         public HierarchyId Level { get; set; }
 
-        public static implicit operator TaskDto(TaskModel task)
+        public static implicit operator TaskModel(TaskDto task)
         {
-            return new TaskDto()
+            return new TaskModel()
             {
                 Id = task.Id,
                 ProjectId = task.ProjectId,
@@ -35,10 +29,12 @@ namespace API.Models
                 EstimatedEndDate = task.EstimatedEndDate,
                 ActualStartDate = task.ActualStartDate,
                 ActualEndDate = task.ActualEndDate,
-                TaskStatusName = task.TaskStatus.StatusName,
-                Level = task.Level
+                TaskStatus = new TaskStatusModel()
+                {
+                    StatusName = task.TaskStatusName
+                },
+                Level = task.Level,
             };
         }
     }
-
 }

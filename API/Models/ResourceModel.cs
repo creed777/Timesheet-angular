@@ -30,14 +30,16 @@ namespace API.Models
         /// <summary>
         /// Resource type object
         /// </summary>
-        [Required]
         public ResourceTypeModel ResourceType { get; set; }
         /// <summary>
         /// Resource status object
         /// </summary>
-        [Required]
         public ResourceStatusModel ResourceStatus { get; set; }
-
+        public int ProjectId { get; set; }
+        public ICollection<ProjectModel> Project { get; set; }
+        public int TaskId { get; set; }
+        public ICollection<TaskModel> Task { get; set; }
+    
         public static implicit operator ResourceDto(ResourceModel resource)
         {
             return new ResourceDto()

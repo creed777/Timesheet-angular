@@ -12,8 +12,10 @@ namespace API.Models
         [Required]
         public string ClientName { get; set; } = default!;
         [Required]
-        public string ClientDescription { get; set; } = default!;
-        public virtual ClientStatusModel ClientStatus { get; set; } = new ClientStatusModel();
+        public string ClientDescription { get; set; }
+        public ClientStatusModel ClientStatus { get; set; }
+        public int ProjectId { get; set; }
+        public ICollection<ProjectModel> Project { get; set; }
 
         public static implicit operator ClientDto(ClientModel client)
         {

@@ -14,7 +14,7 @@ namespace API.Models
         [Required]
         public string ProjectDescription { get; set; } = string.Empty;
         [Required]
-        public virtual ClientModel Client { get; set; } = new ClientModel();
+        public ClientModel Client { get; set; }
         public uint? DivisionId { get; set; }
         public DateTime? EstimatedStartDate { get; set; }
         public DateTime? EstimatedEndDate { get; set; }
@@ -27,8 +27,9 @@ namespace API.Models
         public decimal? ActualLaborCost { get; set; }
         public decimal? EstimatedMaterialCost { get; set; }
         public decimal? ActualMaterialCost { get; set; }
-        public virtual ProjectStatusModel ProjectStatus { get; set; } = new ProjectStatusModel();
+        public ProjectStatusModel ProjectStatus { get; set; }
         public ICollection<TaskModel> Task { get; set; }
+        public ICollection<ResourceModel> Resource { get; set; }
 
         public static implicit operator ProjectDto(ProjectModel project)
         {
