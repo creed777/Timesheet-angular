@@ -3,18 +3,18 @@ using API.DTO;
 
 namespace API.Models
 {
+#nullable enable
+
     public class ProjectModel
     {
         [Key]
-        public int Id { get; set; }
-        [Required]
-        public string ProjectId { get; set; }  
+        public int ProjectId { get; set; }
         [Required]
         public string ProjectName { get; set; } = string.Empty;
         [Required]
-        public string ProjectDescription { get; set; } = string.Empty;
+        public string ProjectSn { get; set; } = string.Empty;
         [Required]
-        public ClientModel Client { get; set; }
+        public string ProjectDescription { get; set; } = string.Empty;
         public uint? DivisionId { get; set; }
         public DateTime? EstimatedStartDate { get; set; }
         public DateTime? EstimatedEndDate { get; set; }
@@ -30,15 +30,18 @@ namespace API.Models
         public ProjectStatusModel ProjectStatus { get; set; }
         public ICollection<TaskModel> Task { get; set; }
         public ICollection<ResourceModel> Resource { get; set; }
+        public ClientModel Client { get; set; }
+
 
         public static implicit operator ProjectDto(ProjectModel project)
         {
             return new ProjectDto
             {
                 ProjectId = project.ProjectId,
+                ProjectSn = project.ProjectSn,
                 ProjectName = project.ProjectName,
                 ProjectDescription = project.ProjectDescription,
-                ClientId = project.Client.ClientId,
+                ClientId = project.Client.ClientSn,
                 DivisionId = project.DivisionId,
                 EstimatedStartDate = project.EstimatedStartDate,
                 EstimatedEndDate = project.EstimatedEndDate,

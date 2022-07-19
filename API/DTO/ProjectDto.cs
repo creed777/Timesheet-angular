@@ -4,7 +4,8 @@ namespace API.DTO
 {
     public class ProjectDto
     {
-        public string ProjectId { get; set; } 
+        public int ProjectId { get; set; } 
+        public string ProjectSn { get; set; }
         public string ProjectName { get; set; } = string.Empty;
         public string ProjectDescription { get; set; } = string.Empty;
         public string ClientId { get; set; }
@@ -31,7 +32,7 @@ namespace API.DTO
                 ProjectDescription = project.ProjectDescription,
                 Client = new ClientModel()
                 {
-                    ClientId = project.ClientId,
+                    ClientSn = project.ClientId,
                 },
                 DivisionId = project.DivisionId,
                 EstimatedStartDate = project.EstimatedStartDate,

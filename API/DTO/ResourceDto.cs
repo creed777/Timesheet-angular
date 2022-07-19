@@ -5,7 +5,7 @@ namespace API.DTO
 
     public class ResourceDto
     {
-        public string ResourceId { get; set; }
+        public int ResourceId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ResourceTypeName { get; set; }

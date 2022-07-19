@@ -14,7 +14,7 @@ namespace API.DTO
         {
             return new ClientModel
             {
-                ClientId = client.ClientId,
+                ClientSn = client.ClientId,
                 ClientName = client.ClientName,
                 ClientDescription = client.ClientDescription,
                 ClientStatus = new ClientStatusModel()

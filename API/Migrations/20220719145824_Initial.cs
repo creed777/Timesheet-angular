@@ -24,17 +24,29 @@ namespace API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ResourceStatus",
+                name: "ProjectStatus",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StatusName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ResourceId = table.Column<int>(type: "int", nullable: false)
+                    StatusName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ResourceStatus", x => x.Id);
+                    table.PrimaryKey("PK_ProjectStatus", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ResourceStatus",
+                columns: table => new
+                {
+                    ResourceStatusId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StatusName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResourceStatus", x => x.ResourceStatusId);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,46 +80,43 @@ namespace API.Migrations
                 name: "Client",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ClientId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ClientSn = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClientName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClientDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ClientStatusId = table.Column<int>(type: "int", nullable: true),
-                    ProjectId = table.Column<int>(type: "int", nullable: false)
+                    ClientStatusId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Client", x => x.Id);
+                    table.PrimaryKey("PK_Client", x => x.ClientId);
                     table.ForeignKey(
                         name: "FK_Client_ClientStatus_ClientStatusId",
                         column: x => x.ClientStatusId,
                         principalTable: "ClientStatus",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Resource",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ResourceId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ResourceId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ResourceTypeId = table.Column<long>(type: "bigint", nullable: true),
-                    ResourceStatusId = table.Column<long>(type: "bigint", nullable: true),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
-                    TaskId = table.Column<int>(type: "int", nullable: false)
+                    ResourceStatusId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Resource", x => x.Id);
+                    table.PrimaryKey("PK_Resource", x => x.ResourceId);
                     table.ForeignKey(
                         name: "FK_Resource_ResourceStatus_ResourceStatusId",
                         column: x => x.ResourceStatusId,
                         principalTable: "ResourceStatus",
-                        principalColumn: "Id");
+                        principalColumn: "ResourceStatusId");
                     table.ForeignKey(
                         name: "FK_Resource_ResourceTypes_ResourceTypeId",
                         column: x => x.ResourceTypeId,
@@ -119,12 +128,11 @@ namespace API.Migrations
                 name: "Project",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ProjectId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProjectName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProjectSn = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProjectDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ClientId = table.Column<int>(type: "int", nullable: false),
                     DivisionId = table.Column<long>(type: "bigint", nullable: true),
                     EstimatedStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EstimatedEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -136,15 +144,23 @@ namespace API.Migrations
                     EstimatedLaborCost = table.Column<decimal>(type: "decimal(7,4)", precision: 7, scale: 4, nullable: true),
                     ActualLaborCost = table.Column<decimal>(type: "decimal(7,4)", precision: 7, scale: 4, nullable: true),
                     EstimatedMaterialCost = table.Column<decimal>(type: "decimal(7,4)", precision: 7, scale: 4, nullable: true),
-                    ActualMaterialCost = table.Column<decimal>(type: "decimal(7,4)", precision: 7, scale: 4, nullable: true)
+                    ActualMaterialCost = table.Column<decimal>(type: "decimal(7,4)", precision: 7, scale: 4, nullable: true),
+                    ProjectStatusId = table.Column<long>(type: "bigint", nullable: false),
+                    ClientId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Project", x => x.Id);
+                    table.PrimaryKey("PK_Project", x => x.ProjectId);
                     table.ForeignKey(
                         name: "FK_Project_Client_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Client",
+                        principalColumn: "ClientId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Project_ProjectStatus_ProjectStatusId",
+                        column: x => x.ProjectStatusId,
+                        principalTable: "ProjectStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -163,33 +179,13 @@ namespace API.Migrations
                         name: "FK_ProjectModelResourceModel_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Project",
-                        principalColumn: "Id",
+                        principalColumn: "ProjectId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProjectModelResourceModel_Resource_ResourceId",
                         column: x => x.ResourceId,
                         principalTable: "Resource",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProjectStatus",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StatusName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProjectId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProjectStatus", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProjectStatus_Project_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Project",
-                        principalColumn: "Id",
+                        principalColumn: "ResourceId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -197,7 +193,7 @@ namespace API.Migrations
                 name: "Task",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    TaskId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TaskName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TaskDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -206,18 +202,17 @@ namespace API.Migrations
                     ActualStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ActualEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TaskStatusId = table.Column<int>(type: "int", nullable: true),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: true),
                     Level = table.Column<HierarchyId>(type: "hierarchyid", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Task", x => x.Id);
+                    table.PrimaryKey("PK_Task", x => x.TaskId);
                     table.ForeignKey(
                         name: "FK_Task_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Project",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ProjectId");
                     table.ForeignKey(
                         name: "FK_Task_TaskStatus_TaskStatusId",
                         column: x => x.TaskStatusId,
@@ -239,13 +234,13 @@ namespace API.Migrations
                         name: "FK_ResourceModelTaskModel_Resource_ResourceId",
                         column: x => x.ResourceId,
                         principalTable: "Resource",
-                        principalColumn: "Id",
+                        principalColumn: "ResourceId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ResourceModelTaskModel_Task_TaskId",
                         column: x => x.TaskId,
                         principalTable: "Task",
-                        principalColumn: "Id",
+                        principalColumn: "TaskId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -253,20 +248,19 @@ namespace API.Migrations
                 name: "TaskTime",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    TimeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TaskId = table.Column<int>(type: "int", nullable: false),
                     Time = table.Column<decimal>(type: "decimal(7,4)", precision: 7, scale: 4, nullable: false),
-                    TaskModelId = table.Column<int>(type: "int", nullable: true)
+                    TaskId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaskTime", x => x.Id);
+                    table.PrimaryKey("PK_TaskTime", x => x.TimeId);
                     table.ForeignKey(
-                        name: "FK_TaskTime_Task_TaskModelId",
-                        column: x => x.TaskModelId,
+                        name: "FK_TaskTime_Task_TaskId",
+                        column: x => x.TaskId,
                         principalTable: "Task",
-                        principalColumn: "Id");
+                        principalColumn: "TaskId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -280,15 +274,14 @@ namespace API.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Project_ProjectStatusId",
+                table: "Project",
+                column: "ProjectStatusId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjectModelResourceModel_ResourceId",
                 table: "ProjectModelResourceModel",
                 column: "ResourceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectStatus_ProjectId",
-                table: "ProjectStatus",
-                column: "ProjectId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Resource_ResourceStatusId",
@@ -316,18 +309,15 @@ namespace API.Migrations
                 column: "TaskStatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TaskTime_TaskModelId",
+                name: "IX_TaskTime_TaskId",
                 table: "TaskTime",
-                column: "TaskModelId");
+                column: "TaskId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "ProjectModelResourceModel");
-
-            migrationBuilder.DropTable(
-                name: "ProjectStatus");
 
             migrationBuilder.DropTable(
                 name: "ResourceModelTaskModel");
@@ -355,6 +345,9 @@ namespace API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Client");
+
+            migrationBuilder.DropTable(
+                name: "ProjectStatus");
 
             migrationBuilder.DropTable(
                 name: "ClientStatus");

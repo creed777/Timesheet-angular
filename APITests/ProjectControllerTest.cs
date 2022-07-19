@@ -1,12 +1,6 @@
-using API.Interfaces;
 using API.Models;
-using API.Services;
-using APITests.BogusData;
-using FluentAssertions;
-using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 
 namespace APITests
 {
@@ -45,7 +39,7 @@ namespace APITests
         {
             ProjectModel project = new()
             {
-                ProjectId = "ProjectAdd1",
+                ProjectSn = "ProjectAdd1",
                 ProjectName = "API Add Test",
                 ProjectStatus = new ProjectStatusModel()
                 {

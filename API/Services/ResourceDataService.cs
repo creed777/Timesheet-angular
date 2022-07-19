@@ -8,12 +8,12 @@ namespace API.Services
 {
     public class ResourceDataService : IResourceDataService
     { 
-        private ILogger<ProjectDataService> _logger { get; set; }
+        private ILogger<ResourceDataService> _logger { get; set; }
         private IHttpContextAccessor _httpContext { get; set; }
         private IDbContextFactory<DatabaseContext> _dbFactory { get; set; }
 
         public ResourceDataService(
-            ILogger<ProjectDataService> logger,
+            ILogger<ResourceDataService> logger,
             IHttpContextAccessor accessor,
             IDbContextFactory<DatabaseContext> databaseFactory,
             bool initialize = true)
@@ -40,7 +40,7 @@ namespace API.Services
 
         }
 
-        public async Task<ResourceModel> GetResourceByIdAsync(string resourceId)
+        public async Task<ResourceModel> GetResourceByIdAsync(int resourceId)
         {
             await using var db = _dbFactory.CreateDbContext();
 
@@ -132,11 +132,11 @@ namespace API.Services
             }
         }
 
-        public async Task<int> DeleteResourceAsync(string resourceId)
+        public async Task<int> DeleteResourceAsync(int resourceId)
         {
             await using var db = _dbFactory.CreateDbContext();
 
-            if (string.IsNullOrEmpty(resourceId))
+            if (resourceId == 0)
             {
                 _logger.LogError(new ArgumentNullException(nameof(resourceId)).ToString());
                 return -1;

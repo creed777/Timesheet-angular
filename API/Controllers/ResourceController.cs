@@ -48,10 +48,10 @@ namespace API.Controllers
         /// <param name="resourceId"></param>
         /// <returns><see cref="ActionResult{ResourceModel}"/></returns>
         [HttpGet("{resourceId}")]
-        public async Task<ActionResult<ResourceDto>> GetResourceByIdAsync(string resourceId)
+        public async Task<ActionResult<ResourceDto>> GetResourceByIdAsync(int resourceId)
         {
-            if (string.IsNullOrEmpty(resourceId))
-                return BadRequest(new ArgumentNullException(resourceId));
+            if (resourceId == 0)
+                return BadRequest(new ArgumentNullException());
 
             var resource = await _resourceDomain.GetResourceByIdAsync(resourceId);
             return resource;
@@ -117,10 +117,10 @@ namespace API.Controllers
         /// <param name="resourceId"></param>
         /// <returns><see cref="IActionResult"/></returns>
         [HttpDelete("{resourceId}")]
-        public async Task<IActionResult> DeleteResource(string resourceId)
+        public async Task<IActionResult> DeleteResource(int resourceId)
         {
-            if (string.IsNullOrEmpty(resourceId))
-                return BadRequest(new ArgumentNullException(resourceId));
+            if (resourceId == 0)
+                return BadRequest(new ArgumentNullException());
 
             var result = await _resourceDomain.DeleteResourceAsync(resourceId);
             if(result != -1)

@@ -30,9 +30,9 @@ namespace API.Domains
             return mapping;
         }
 
-        public async Task<ResourceDto> GetResourceByIdAsync(string resourceId)
+        public async Task<ResourceDto> GetResourceByIdAsync(int resourceId)
         {
-            if (resourceId == null)
+            if (resourceId == 0)
                 return new ResourceModel();
 
             return await _tds.GetResourceByIdAsync(resourceId);
@@ -47,9 +47,9 @@ namespace API.Domains
             return  await _tds.AddResourceAsync(mapping);
         }
 
-        public async Task<int> DeleteResourceAsync(string resourceId)
+        public async Task<int> DeleteResourceAsync(int resourceId)
         {
-            if (resourceId == null)
+            if (resourceId == 0)
                 return -1;
 
             return await _tds.DeleteResourceAsync(resourceId);

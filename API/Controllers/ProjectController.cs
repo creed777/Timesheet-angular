@@ -38,9 +38,9 @@ namespace API.Controllers
         ///
         /// </remarks>
         [HttpGet("{projectId}")]
-        public async Task<ActionResult<ProjectModel>> GetProject(string projectId)
+        public async Task<ActionResult<ProjectModel>> GetProject(int projectId)
         {
-            if (projectId == null)
+            if (projectId == 0)
                 return BadRequest("Project id cannot be null");
 
             return Ok(await _projectDomain.GetProject(projectId));
@@ -75,9 +75,9 @@ namespace API.Controllers
         /// <param name="projectId"></param>
         /// <returns><see cref="IActionResult"/></returns>
         [HttpDelete("{projectId}")]
-        public async Task<IActionResult> DeleteProject(string projectId)
+        public async Task<IActionResult> DeleteProject(int projectId)
         {
-            if (string.IsNullOrEmpty(projectId))
+            if (projectId == 0)
                 return BadRequest();
 
             var result = await _projectDomain.DeleteProject(projectId);

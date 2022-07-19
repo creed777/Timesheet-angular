@@ -62,7 +62,7 @@ namespace API.Services
             {
                 await using var db = _dbFactory.CreateDbContext();
                 var result = await db.Client
-                    .Where(x => x.ClientId == clientId)
+                    .Where(x => x.ClientSn == clientId)
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
 
@@ -122,7 +122,7 @@ namespace API.Services
                 return -1;
             }
                 var clientModel = await db.Client
-                    .Where(x => x.ClientId == clientId)
+                    .Where(x => x.ClientSn == clientId)
                     .FirstOrDefaultAsync();
 
                 if (clientModel == null)

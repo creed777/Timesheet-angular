@@ -21,8 +21,11 @@ namespace API.DTO
         {
             return new TaskModel()
             {
-                Id = task.Id,
-                ProjectId = task.ProjectId,
+                TaskId = task.Id,
+                Project = new ProjectModel()
+                {
+                    ProjectId = task.ProjectId,
+                },
                 TaskName = task.TaskName,
                 TaskDescription = task.TaskDescription,
                 EstimatedStartDate = task.EstimatedStartDate,

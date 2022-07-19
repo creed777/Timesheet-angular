@@ -6,8 +6,8 @@ namespace API.Interfaces
     {
         Task<List<ResourceModel>> GetResourcesByTypeAsync(string resourceTypeName);
         Task<List<ResourceTypeModel>> GetResourceTypeList();
-        Task<ResourceModel> GetResourceByIdAsync(string resourceId);
+        Task<ResourceModel> GetResourceByIdAsync(int resourceId);
         Task<int> AddResourceAsync(ResourceModel resource);
-        Task<int> DeleteResourceAsync(string resourceId);
+        Task<int> DeleteResourceAsync(int resourceId);
     }
 }

@@ -40,7 +40,7 @@ namespace API.Services
 
         }
 
-        public async Task<ProjectModel> GetProject(string projectId)
+        public async Task<ProjectModel> GetProject(int projectId)
         {
             await using var db = _dbFactory.CreateDbContext();
             var result = await db.Project
@@ -62,6 +62,9 @@ namespace API.Services
         {
             await using var db = _dbFactory.CreateDbContext();
             return await db.Project
+                .Include(x => x.ProjectStatus)
+                .Include(x => x.Client)
+                .Include(x => x.Task)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -97,11 +100,11 @@ namespace API.Services
             }
         }
 
-        public async Task<int> DeleteProject(string projectId)
+        public async Task<int> DeleteProject(int projectId)
         {
             await using var db = _dbFactory.CreateDbContext();
 
-            if (string.IsNullOrEmpty(projectId))
+            if (projectId == 0)
             {
                 _logger.LogError(new ArgumentNullException(nameof(projectId)).ToString());
                 return -1;

@@ -46,32 +46,43 @@ namespace API.Models
                 .Property(x => x.Cost)
                 .HasPrecision(7, 4);
 
-            //modelBuilder.Entity<ProjectModel>()
-            //    .HasMany(s => s.Task);
-            //modelBuilder.Entity<ProjectModel>()
-            //    .HasOne(p => p.ProjectStatus);
-            //modelBuilder.Entity<ProjectModel>()
-            //    .HasMany(p => p.Resource);
-            //modelBuilder.Entity<ProjectModel>()
-            //    .HasOne(p => p.Client);
+            //Project realtionships
+            modelBuilder.Entity<ProjectModel>()
+                .HasMany(s => s.Task)
+                .WithOne(t => t.Project);
+            modelBuilder.Entity<ProjectModel>()
+                .HasOne(p => p.ProjectStatus)
+                .WithMany(q => q.Project);
+            modelBuilder.Entity<ProjectModel>()
+                .HasMany(p => p.Resource)
+                .WithMany(q => q.Project);
+            modelBuilder.Entity<ProjectModel>()
+                .HasOne(p => p.Client)
+                .WithMany(q => q.Project);
 
-            //modelBuilder.Entity<ClientModel>()
-            //    .HasOne(x => x.ClientStatus);
+            //Client relationships
+            modelBuilder.Entity<ClientModel>()
+                .HasOne(x => x.ClientStatus)
+                .WithMany(y => y.Client);
 
-            //modelBuilder.Entity<ResourceModel>()
-            //    .HasOne(s => s.ResourceStatus);
-            //modelBuilder.Entity<ResourceModel>()
-            //    .HasOne(s => s.ResourceType);
+            //Resource relationships
+            modelBuilder.Entity<ResourceModel>()
+                .HasOne(s => s.ResourceStatus)
+                .WithMany(t => t.Resource);
+            modelBuilder.Entity<ResourceModel>()
+                .HasOne(s => s.ResourceType)
+                .WithMany(t => t.Resource);
 
-            //modelBuilder.Entity<TaskModel>()
-            //    .HasMany(s => s.TaskTime);
-            //modelBuilder.Entity<TaskModel>()
-            //    .HasMany(s => s.Resource);
-            //modelBuilder.Entity<TaskModel>()
-            //    .HasOne(s => s.TaskStatus);
-           // modelBuilder.Entity<TaskModel>()
-                //.Property(e => e.Level)
-                //.HasColumnName("Level");
+            //Task relationships
+            modelBuilder.Entity<TaskModel>()
+                .HasMany(s => s.TaskTime)
+                .WithOne(t => t.Task);
+            modelBuilder.Entity<TaskModel>()
+                .HasMany(s => s.Resource)
+                .WithMany(t => t.Task);
+            modelBuilder.Entity<TaskModel>()
+                .HasOne(s => s.TaskStatus)
+                .WithMany(t => t.Task);
         }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)

@@ -47,7 +47,7 @@ builder.Services.AddSwaggerGen(options =>
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContextFactory<DatabaseContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString, x => x.UseHierarchyId()));
 builder.Services.AddScoped(p =>
    p.GetRequiredService<IDbContextFactory<DatabaseContext>>().CreateDbContext());
 var app = builder.Build();
