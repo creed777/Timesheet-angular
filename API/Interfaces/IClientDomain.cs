@@ -1,5 +1,4 @@
 ﻿using API.DTO;
-using API.Models;
 
 namespace API.Interfaces
 {
@@ -9,6 +8,6 @@ namespace API.Interfaces
         Task<List<ClientDto>> GetAllClientsAsync();
         Task<int> AddClientAsync(ClientDto client);
         Task<int> DeleteClient(string clientId);
-        Task<List<ClientStatusModel>> GetClientStatusListAsync();
+        Task<List<ClientStatusDto>> GetClientStatusListAsync();
     }
 }

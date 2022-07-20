@@ -41,9 +41,11 @@ namespace API.Domains
             return await _tds.DeleteClient(clientId);
         }
 
-        public async Task<List<ClientStatusModel>> GetClientStatusListAsync()
+        public async Task<List<ClientStatusDto>> GetClientStatusListAsync()
         {
-            return await _tds.GetClientStatusListAsync();
+            var clientStatusModel = await _tds.GetClientStatusListAsync();
+            List<ClientStatusDto> clientStatusDto = clientStatusModel.ConvertAll<ClientStatusDto>(x => x);
+            return clientStatusDto;
         }
     }
 }

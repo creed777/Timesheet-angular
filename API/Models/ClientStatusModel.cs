@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using API.DTO;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Models
 {
@@ -9,5 +10,14 @@ namespace API.Models
         [Required]
         public string ClientStatusName { get; set; }
         public virtual ICollection<ClientModel> Client { get; set; }
+        
+        public static implicit operator ClientStatusDto(ClientStatusModel clientStatusModel)
+        {
+            return new ClientStatusDto()
+            {
+                Id = clientStatusModel.Id,
+                ClientStatusName = clientStatusModel.ClientStatusName
+            };
+        }
     }
 }

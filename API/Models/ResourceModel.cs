@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using API.DTO;
+﻿using API.DTO;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Models
 {
@@ -15,7 +15,8 @@ namespace API.Models
         public ResourceStatusModel ResourceStatus { get; set; }
         public ICollection<ProjectModel> Project { get; set; }
         public ICollection<TaskModel> Task { get; set; }
-    
+        
+
         public static implicit operator ResourceDto(ResourceModel resource)
         {
             return new ResourceDto()

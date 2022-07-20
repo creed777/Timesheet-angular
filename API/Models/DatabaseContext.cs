@@ -49,40 +49,48 @@ namespace API.Models
             //Project realtionships
             modelBuilder.Entity<ProjectModel>()
                 .HasMany(s => s.Task)
-                .WithOne(t => t.Project);
+                .WithOne(t => t.Project)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProjectModel>()
                 .HasOne(p => p.ProjectStatus)
-                .WithMany(q => q.Project);
+                .WithMany(q => q.Project)
+                .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<ProjectModel>()
                 .HasMany(p => p.Resource)
                 .WithMany(q => q.Project);
             modelBuilder.Entity<ProjectModel>()
                 .HasOne(p => p.Client)
-                .WithMany(q => q.Project);
+                .WithMany(q => q.Project)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //Client relationships
             modelBuilder.Entity<ClientModel>()
                 .HasOne(x => x.ClientStatus)
-                .WithMany(y => y.Client);
+                .WithMany(y => y.Client)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //Resource relationships
             modelBuilder.Entity<ResourceModel>()
                 .HasOne(s => s.ResourceStatus)
-                .WithMany(t => t.Resource);
+                .WithMany(t => t.Resource)
+                .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<ResourceModel>()
                 .HasOne(s => s.ResourceType)
-                .WithMany(t => t.Resource);
+                .WithMany(t => t.Resource)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //Task relationships
             modelBuilder.Entity<TaskModel>()
                 .HasMany(s => s.TaskTime)
-                .WithOne(t => t.Task);
+                .WithOne(t => t.Task)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<TaskModel>()
                 .HasMany(s => s.Resource)
                 .WithMany(t => t.Task);
             modelBuilder.Entity<TaskModel>()
                 .HasOne(s => s.TaskStatus)
-                .WithMany(t => t.Task);
+                .WithMany(t => t.Task)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)

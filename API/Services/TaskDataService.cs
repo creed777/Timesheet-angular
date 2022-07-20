@@ -42,8 +42,10 @@ namespace API.Services
         {
             await using var db = _dbFactory.CreateDbContext();
 
-            var project = db.Project
-                .Where(x => x.ProjectId == projectId)
+            var project = db.Task
+                .Where(x => x.Project.ProjectId == projectId)
+                .Include(x => x.TaskStatus)
+                .Include(x => x.Resource)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
 
@@ -59,8 +61,10 @@ namespace API.Services
             await using var db = _dbFactory.CreateDbContext();
 
             var result = await db.Task.Where(x => x.TaskId == taskId)
-                                             .AsNoTracking()
-                                             .FirstOrDefaultAsync();
+                                            .Include(x => x.TaskStatus)
+                                            .Include(x => x.Resource)
+                                            .AsNoTracking()
+                                            .FirstOrDefaultAsync();
 
             return result;
 
@@ -121,6 +125,7 @@ namespace API.Services
         {
             await using var db = _dbFactory.CreateDbContext();
             var result = await db.TaskTime
+                                .Include(x => x.Time)
                                 .Where(x => x.Task.TaskId == taskId)
                                 .ToListAsync();
             return result;

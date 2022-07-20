@@ -44,6 +44,9 @@ namespace API.Services
         {
             await using var db = _dbFactory.CreateDbContext();
             var result = await db.Project
+                .Include(x => x.ProjectStatus)
+                .Include(x => x.Client)
+                .Include(x => x.Task)
                 .AsNoTracking()
                 .Where(p => p.ProjectId == projectId)
                 .FirstOrDefaultAsync();

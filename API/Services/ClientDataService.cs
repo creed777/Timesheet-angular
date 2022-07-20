@@ -46,6 +46,8 @@ namespace API.Services
             try
             {
                 return await db.Client
+                    .Include(x => x.Project)
+                    .Include(x => x.ClientStatus)
                     .AsNoTracking()
                     .ToListAsync();
             }
@@ -63,6 +65,8 @@ namespace API.Services
                 await using var db = _dbFactory.CreateDbContext();
                 var result = await db.Client
                     .Where(x => x.ClientSn == clientId)
+                    .Include(x => x.Project)
+                    .Include(x => x.ClientStatus)
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
 

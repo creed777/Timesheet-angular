@@ -6,6 +6,7 @@ namespace API.Domains
 {
     public class ResourceDomain : IResourceDomain
     {
+        private bool IsGetRequest { get; set; }
         private IResourceDataService _tds { get; set; }
 
         public ResourceDomain(IResourceDataService tds)
@@ -13,12 +14,12 @@ namespace API.Domains
             _tds = tds;
         }
 
-        public async Task<List<ResourceDto>> GetResourcesByTypeAsync(string resourceTypeName)
+        public async Task<List<ResourceDto>> GetResourcesByTypeAsync(int resourceTypeId)
         {
-            if (resourceTypeName == null)
+            if (resourceTypeId == 0)
                 return null;
 
-            var result = await _tds.GetResourcesByTypeAsync(resourceTypeName);
+            var result = await _tds.GetResourcesByTypeAsync(resourceTypeId);
             List<ResourceDto> mapping = result.ConvertAll<ResourceDto>(x => x);
             return mapping;
         }
@@ -35,10 +36,12 @@ namespace API.Domains
             if (resourceId == 0)
                 return new ResourceModel();
 
-            return await _tds.GetResourceByIdAsync(resourceId);
+            var resourceModel = await _tds.GetResourceByIdAsync(resourceId);
+            ResourceDto resourceDto = resourceModel;
+            return resourceDto;
         }
 
-        public async Task<int> AddResourceAsync(ResourceDto resource)
+        public async Task<int> AddResourceAsync(CreateResourceDto resource)
         {
             if (resource == null)
                 return -1;

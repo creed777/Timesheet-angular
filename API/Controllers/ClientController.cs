@@ -76,13 +76,14 @@ namespace API.Controllers
             if(string.IsNullOrEmpty(clientId))
                 return BadRequest(new ArgumentNullException(clientId));
 
-            return Ok( await _clientDomain.DeleteClient(clientId));
+            var result =  await _clientDomain.DeleteClient(clientId);
+            return Ok("Client record deleted.");
         }
 
         /// <summary>
         /// Get a list of Client Status
         /// </summary>
-        /// <returns><see cref="ActionResult{ClientStatusModel}"/></returns>
+        /// <returns><see cref="ActionResult{ClientStatusDto}"/></returns>
         [HttpGet]
         public async Task<IActionResult> GetClientStatusListAsync()
         {
