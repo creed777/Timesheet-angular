@@ -33,10 +33,10 @@ namespace API.Controllers
         /// <param name="clientId"></param>
         /// <returns><see cref="ActionResult{ClientDto}"/></returns>
         [HttpGet("{clientId}")]
-        public async Task<ActionResult<ClientDto>> GetClient(string clientId)
+        public async Task<ActionResult<ClientDto>> GetClient(int clientId)
         {
-            if (string.IsNullOrEmpty(clientId))
-                return BadRequest(new ArgumentNullException(clientId));
+            if (clientId == 0)
+                return BadRequest(new ArgumentNullException(clientId.ToString()));
 
             return Ok(await _clientDomain.GetClientByIdAsync(clientId));
         }
@@ -45,18 +45,18 @@ namespace API.Controllers
         /// Adds a new client
         /// </summary>
         /// <param name="client"></param>
-        /// <returns><see cref="ActionResult"/></returns>
+        /// <returns><see cref="ActionResult{ClientDto}"/></returns>
         [HttpPost()]
-        public async Task<ActionResult> AddClient(ClientDto client)
+        public async Task<ActionResult<ClientDto>> AddClient(CreateClientDto client)
         {
             var result = await _clientDomain.AddClientAsync(client);
 
             if (client == null)
-                BadRequest(new ArgumentNullException("client"));
+                BadRequest(new ArgumentNullException());
 
             if (result > 0)
             {
-                return CreatedAtAction(nameof(AddClient), new { id = client.ClientId }, client);
+                return Ok(result);
             }
             else
             {
@@ -76,13 +76,14 @@ namespace API.Controllers
             if(string.IsNullOrEmpty(clientId))
                 return BadRequest(new ArgumentNullException(clientId));
 
-            return Ok( await _clientDomain.DeleteClient(clientId));
+            var result =  await _clientDomain.DeleteClient(clientId);
+            return Ok("Client record deleted.");
         }
 
         /// <summary>
         /// Get a list of Client Status
         /// </summary>
-        /// <returns><see cref="ActionResult{ClientStatusModel}"/></returns>
+        /// <returns><see cref="ActionResult{ClientStatusDto}"/></returns>
         [HttpGet]
         public async Task<IActionResult> GetClientStatusListAsync()
         {

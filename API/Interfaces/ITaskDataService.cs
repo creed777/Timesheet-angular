@@ -4,12 +4,14 @@ namespace API.Interfaces
 {
     public interface ITaskDataService
     {
-        Task<List<TaskModel>> GetTasksByProjectIdAsync(string projectId);
+        Task<List<TaskModel>> GetTasksByProjectIdAsync(int projectId);
         Task<TaskModel> GetTaskByIdAsync(int taskId);
-        Task<int> UpdateTask(TaskModel task);
-        Task<int> DeleteTask(int taskId);
-        Task<List<TaskStatusModel>> GetTaskStatusList();
-        Task<List<TaskTimeModel>> GetTaskTimeEntries(int taskId);
+        Task<int> UpdateTaskAsync(TaskModel task);
+        Task<int> DeleteTaskAsync(int taskId);
+        Task<List<TaskStatusModel>> GetTaskStatusListAsync();
+        Task<List<TaskTimeModel>> GetTaskTimeEntriesAsync(int taskId);
         //Task<List<ResourceModel>> GetTaskResources(int taskId);
+        Task<int> AddTaskAsync(TaskModel task);
+
     }
 }

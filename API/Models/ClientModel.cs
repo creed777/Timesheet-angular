@@ -3,25 +3,27 @@ using API.DTO;
 
 namespace API.Models
 {
+#nullable enable
+
     public class ClientModel
     {
         [Key]
-        public int Id { get; set; }
+        public int ClientId { get; set; }
         [Required]
-        public string ClientId { get; set; }
+        public string ClientSn { get; set; }
         [Required]
-        public string ClientName { get; set; } = default!;
+        public string ClientName { get; set; }
         [Required]
         public string ClientDescription { get; set; }
-        public ClientStatusModel ClientStatus { get; set; }
-        public int ProjectId { get; set; }
-        public ICollection<ProjectModel> Project { get; set; }
+        public virtual ClientStatusModel ClientStatus { get; set; }
+        public virtual ICollection<ProjectModel> Project { get; set; }
 
         public static implicit operator ClientDto(ClientModel client)
         {
             return new ClientDto()
             {
                 ClientId = client.ClientId,
+                ClientSn = client.ClientSn,
                 ClientName = client.ClientName,
                 ClientDescription = client.ClientDescription,
                 ClientStatusId = client.ClientStatus.Id

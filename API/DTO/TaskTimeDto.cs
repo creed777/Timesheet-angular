@@ -8,13 +8,15 @@ namespace API.DTO
         public int TaskId { get; set; }
         public Decimal Time { get; set; }
 
-        public static implicit operator TaskTimeModel(TaskTimeDto task)
+        public static implicit operator TaskTimeModel(TaskTimeDto taskTime)
         {
             return new TaskTimeModel()
             {
-                Id = task.Id,
-                TaskId = task.TaskId,
-                Time = task.Time
+                Time = taskTime.Time,
+                Task = new TaskModel()
+                {
+                   TaskId = taskTime.TaskId,
+                }
             };
         }
     }

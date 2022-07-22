@@ -23,8 +23,7 @@ namespace APITests.BogusData
 
             var client = new Faker<ClientModel>()
                 .StrictMode(true)
-                .RuleFor(c => c.Id, f => f.Random.Number(1, 100))
-                .RuleFor(c => c.ClientId, f => f.Random.Word())
+                .RuleFor(c => c.ClientId, f => f.Random.Number(1, 1000))
                 .RuleFor(c => c.ClientStatus, f => f.PickRandom(status))
                 .RuleFor(c => c.ClientDescription, f => f.Random.Number(1, 1000).ToString())
                 .RuleFor(c => c.ClientName, f => string.Concat("Client", f.Random.Number(1, 1000).ToString()));

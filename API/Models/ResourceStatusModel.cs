@@ -5,10 +5,9 @@ namespace API.Models
     public class ResourceStatusModel
     {
         [Key]
-        public uint Id { get; set; }
+        public uint ResourceStatusId { get; set; }
         [Required]
         public string StatusName { get; set; }
-        public int ResourceId { get; set; }
-        public ICollection<ResourceModel> Resource { get; set; }
+        public virtual ICollection<ResourceModel> Resource { get; set; }
     }
 }

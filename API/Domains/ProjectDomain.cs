@@ -23,9 +23,9 @@ namespace API.Domains
             return result;
         }
 
-        public async Task<ProjectDto> GetProject(string projectId)
+        public async Task<ProjectDto> GetProject(int projectId)
         {
-            if(projectId == null)
+            if(projectId == 0)
                 return new ProjectDto();
 
             var result = await _tds.GetProject(projectId);
@@ -47,9 +47,9 @@ namespace API.Domains
             return await _tds.AddProject(project);
         }
 
-        public async Task<int> DeleteProject(string projectId)
+        public async Task<int> DeleteProject(int projectId)
         {
-            if(projectId == null)
+            if(projectId == 0)
                 return -1;
 
             return await _tds.DeleteProject(projectId);

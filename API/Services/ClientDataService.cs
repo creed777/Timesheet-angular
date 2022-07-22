@@ -45,9 +45,13 @@ namespace API.Services
             await using var db = _dbFactory.CreateDbContext();
             try
             {
-                return await db.Client
+                var result = await db.Client
+                    .Include(x => x.Project)
+                    .Include(x => x.ClientStatus)
                     .AsNoTracking()
                     .ToListAsync();
+
+                return result;
             }
             catch(DbUpdateException ex)
             {
@@ -56,13 +60,15 @@ namespace API.Services
             }
         }
 
-        public async Task<ClientModel> GetClientByIdAsync(string clientId)
+        public async Task<ClientModel> GetClientByIdAsync(int clientId)
         {
             try
             {
                 await using var db = _dbFactory.CreateDbContext();
                 var result = await db.Client
                     .Where(x => x.ClientId == clientId)
+                    .Include(x => x.Project)
+                    .Include(x => x.ClientStatus)
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
 
@@ -103,7 +109,8 @@ namespace API.Services
                 client.ClientStatus = status;
 
                 await db.Client.AddAsync(client);
-                return await db.SaveChangesAsync();
+                await db.SaveChangesAsync();
+                return client.ClientId;
             }
             catch (Exception ex)
             {
@@ -122,7 +129,7 @@ namespace API.Services
                 return -1;
             }
                 var clientModel = await db.Client
-                    .Where(x => x.ClientId == clientId)
+                    .Where(x => x.ClientSn == clientId)
                     .FirstOrDefaultAsync();
 
                 if (clientModel == null)

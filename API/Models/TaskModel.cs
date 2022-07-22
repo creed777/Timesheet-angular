@@ -9,17 +9,16 @@ namespace API.Models
     public class TaskModel
     {
         [Key]
-        public int Id { get; set; }
+        public int TaskId { get; set; }
         public string TaskName { get; set; }
         public string TaskDescription { get; set; }
         public DateTime? EstimatedStartDate { get; set; }
         public DateTime? EstimatedEndDate { get; set; }
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
-        public virtual TaskStatusModel TaskStatus { get; set; }
-        public virtual ICollection<TaskTimeModel> TaskTime { get; set; }
-        public virtual ICollection<ResourceModel> Resource { get; set; }
-        public int ProjectId { get; set; }
+        public TaskStatusModel TaskStatus { get; set; }
+        public ICollection<TaskTimeModel> TaskTime { get; set; }
+        public ICollection<ResourceModel> Resource { get; set; }
         public ProjectModel Project { get; set; }
         public HierarchyId Level { get; set; }
 
@@ -27,8 +26,8 @@ namespace API.Models
         {
             return new TaskDto()
             {
-                Id = task.Id,
-                ProjectId = task.ProjectId,
+                Id = task.TaskId,
+                ProjectId = task.Project.ProjectId,
                 TaskName = task.TaskName,
                 TaskDescription = task.TaskDescription,
                 EstimatedStartDate = task.EstimatedStartDate,

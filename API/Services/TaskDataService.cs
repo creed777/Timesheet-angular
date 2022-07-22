@@ -6,17 +6,24 @@ namespace API.Services
 {
     public class TaskDataService : ITaskDataService
     {
-        private ILogger<ClientDataService> _logger { get; set; }
+        private ILogger<TaskDataService> _logger { get; set; }
         private readonly IHttpContextAccessor _httpContext;
         private IDbContextFactory<DatabaseContext> _dbFactory { get; set; }
 
-        public TaskDataService(ILogger<ClientDataService> logger, IHttpContextAccessor httpContext, IDbContextFactory<DatabaseContext> dbFactory)
+        public TaskDataService(
+            ILogger<TaskDataService> logger, 
+            IHttpContextAccessor httpContext, 
+            IDbContextFactory<DatabaseContext> dbFactory, 
+            bool initialize = true)
         {
             _logger = logger;
             _httpContext = httpContext;
             _dbFactory = dbFactory;
 
-            Init();
+            if (initialize)
+            {
+                Init();
+            }
         }
 
         public void Init()
@@ -31,16 +38,18 @@ namespace API.Services
             }
         }
 
-        public async Task<List<TaskModel>> GetTasksByProjectIdAsync(string projectId)
+        public async Task<List<TaskModel>> GetTasksByProjectIdAsync(int projectId)
         {
             await using var db = _dbFactory.CreateDbContext();
 
-            var project = db.Project
-                .Where(x => x.ProjectId == projectId)
+            var project = db.Task
+                .Where(x => x.Project.ProjectId == projectId)
+                .Include(x => x.TaskStatus)
+                .Include(x => x.Resource)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
 
-            var result = await db.Task.Where(x => x.ProjectId == project.Id)
+            var result = await db.Task.Where(x => x.Project.ProjectId == project.Id)
                                              .AsNoTracking()
                                              .ToListAsync();
 
@@ -51,22 +60,24 @@ namespace API.Services
         {
             await using var db = _dbFactory.CreateDbContext();
 
-            var result = await db.Task.Where(x => x.Id == taskId)
-                                             .AsNoTracking()
-                                             .FirstOrDefaultAsync();
+            var result = await db.Task.Where(x => x.TaskId == taskId)
+                                            .Include(x => x.TaskStatus)
+                                            .Include(x => x.Resource)
+                                            .AsNoTracking()
+                                            .FirstOrDefaultAsync();
 
             return result;
 
         }
 
-        public async Task<int> UpdateTask(TaskModel task)
-        {
+        public async Task<int> UpdateTaskAsync(TaskModel task)
+        {   
             await using var db = _dbFactory.CreateDbContext();
 
             try
             {
                 var result = db.Task
-                            .Where(x => x.Id == task.Id)
+                            .Where(x => x.TaskId == task.TaskId)
                             .FirstOrDefaultAsync();
 
                 db.Task.Update(task);
@@ -79,12 +90,12 @@ namespace API.Services
             }
         }
 
-        public async Task<int> DeleteTask(int taskId)
+        public async Task<int> DeleteTaskAsync(int taskId)
         {
 
             await using var db = _dbFactory.CreateDbContext();
             var task = db.Task
-                        .Where(x => x.Id == taskId)
+                        .Where(x => x.TaskId == taskId)
                         .FirstOrDefaultAsync();
 
             try
@@ -100,7 +111,7 @@ namespace API.Services
 
         }
 
-        public async Task<List<TaskStatusModel>> GetTaskStatusList()
+        public async Task<List<TaskStatusModel>> GetTaskStatusListAsync()
             {
             await using var db = _dbFactory.CreateDbContext();
             var result = await db.TaskStatus
@@ -110,12 +121,21 @@ namespace API.Services
 
             }
 
-        public async Task<List<TaskTimeModel>> GetTaskTimeEntries(int taskId)
+        public async Task<List<TaskTimeModel>> GetTaskTimeEntriesAsync(int taskId)
         {
             await using var db = _dbFactory.CreateDbContext();
             var result = await db.TaskTime
-                                .Where(x => x.TaskId == taskId)
+                                .Include(x => x.Time)
+                                .Where(x => x.Task.TaskId == taskId)
                                 .ToListAsync();
+            return result;
+        }
+
+        public async Task<int> AddTaskAsync(TaskModel task)
+        {
+            await using var db = _dbFactory.CreateDbContext();
+            var addTask = db.Task.AddAsync(task);
+            var result = await db.SaveChangesAsync();
             return result;
         }
 

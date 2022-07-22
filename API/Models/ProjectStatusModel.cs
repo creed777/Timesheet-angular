@@ -8,7 +8,7 @@ namespace API.Models
         public uint Id { get; set; }
         [Required]
         public string StatusName { get; set; } = string.Empty;
-        public int ProjectId { get; set; }
-        public ProjectModel Project { get; set; }
+        public ICollection<ProjectModel> Project { get; set; }
+
     }
 }

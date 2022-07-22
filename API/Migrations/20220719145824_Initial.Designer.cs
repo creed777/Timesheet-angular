@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220715144857_Initial")]
+    [Migration("20220719145824_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,17 +26,13 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.ClientModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ClientId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientId"), 1L, 1);
 
                     b.Property<string>("ClientDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -44,13 +40,14 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ClientStatusId")
+                    b.Property<string>("ClientSn")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ClientStatusId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("ClientId");
 
                     b.HasIndex("ClientStatusId");
 
@@ -76,11 +73,11 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.ProjectModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ProjectId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectId"), 1L, 1);
 
                     b.Property<DateTime?>("ActualEndDate")
                         .HasColumnType("datetime2");
@@ -128,10 +125,6 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProjectId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long?>("ProjectManagerId")
                         .HasColumnType("bigint");
 
@@ -139,9 +132,18 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("ProjectSn")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("ProjectStatusId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ProjectId");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("ProjectStatusId");
 
                     b.ToTable("Project");
                 });
@@ -154,28 +156,22 @@ namespace API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("StatusName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectId")
-                        .IsUnique();
-
                     b.ToTable("ProjectStatus");
                 });
 
             modelBuilder.Entity("API.Models.ResourceModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ResourceId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResourceId"), 1L, 1);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -185,22 +181,13 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ResourceId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long?>("ResourceStatusId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("ResourceTypeId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("ResourceId");
 
                     b.HasIndex("ResourceStatusId");
 
@@ -211,20 +198,17 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.ResourceStatusModel", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long>("ResourceStatusId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<int>("ResourceId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ResourceStatusId"), 1L, 1);
 
                     b.Property<string>("StatusName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ResourceStatusId");
 
                     b.ToTable("ResourceStatus");
                 });
@@ -252,11 +236,11 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.TaskModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TaskId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TaskId"), 1L, 1);
 
                     b.Property<DateTime?>("ActualEndDate")
                         .HasColumnType("datetime2");
@@ -273,7 +257,7 @@ namespace API.Migrations
                     b.Property<HierarchyId>("Level")
                         .HasColumnType("hierarchyid");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<string>("TaskDescription")
@@ -285,7 +269,7 @@ namespace API.Migrations
                     b.Property<int?>("TaskStatusId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("TaskId");
 
                     b.HasIndex("ProjectId");
 
@@ -312,25 +296,22 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.TaskTimeModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TimeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TimeId"), 1L, 1);
 
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TaskModelId")
+                    b.Property<int?>("TaskId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Time")
                         .HasPrecision(7, 4)
                         .HasColumnType("decimal(7,4)");
 
-                    b.HasKey("Id");
+                    b.HasKey("TimeId");
 
-                    b.HasIndex("TaskModelId");
+                    b.HasIndex("TaskId");
 
                     b.ToTable("TaskTime");
                 });
@@ -368,8 +349,10 @@ namespace API.Migrations
             modelBuilder.Entity("API.Models.ClientModel", b =>
                 {
                     b.HasOne("API.Models.ClientStatusModel", "ClientStatus")
-                        .WithMany()
-                        .HasForeignKey("ClientStatusId");
+                        .WithMany("Client")
+                        .HasForeignKey("ClientStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ClientStatus");
                 });
@@ -382,18 +365,15 @@ namespace API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Client");
-                });
-
-            modelBuilder.Entity("API.Models.ProjectStatusModel", b =>
-                {
-                    b.HasOne("API.Models.ProjectModel", "Project")
-                        .WithOne("ProjectStatus")
-                        .HasForeignKey("API.Models.ProjectStatusModel", "ProjectId")
+                    b.HasOne("API.Models.ProjectStatusModel", "ProjectStatus")
+                        .WithMany("Project")
+                        .HasForeignKey("ProjectStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Project");
+                    b.Navigation("Client");
+
+                    b.Navigation("ProjectStatus");
                 });
 
             modelBuilder.Entity("API.Models.ResourceModel", b =>
@@ -403,7 +383,7 @@ namespace API.Migrations
                         .HasForeignKey("ResourceStatusId");
 
                     b.HasOne("API.Models.ResourceTypeModel", "ResourceType")
-                        .WithMany()
+                        .WithMany("Resource")
                         .HasForeignKey("ResourceTypeId");
 
                     b.Navigation("ResourceStatus");
@@ -415,12 +395,10 @@ namespace API.Migrations
                 {
                     b.HasOne("API.Models.ProjectModel", "Project")
                         .WithMany("Task")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProjectId");
 
                     b.HasOne("API.Models.TaskStatusModel", "TaskStatus")
-                        .WithMany()
+                        .WithMany("Task")
                         .HasForeignKey("TaskStatusId");
 
                     b.Navigation("Project");
@@ -430,9 +408,11 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.TaskTimeModel", b =>
                 {
-                    b.HasOne("API.Models.TaskModel", null)
+                    b.HasOne("API.Models.TaskModel", "Task")
                         .WithMany("TaskTime")
-                        .HasForeignKey("TaskModelId");
+                        .HasForeignKey("TaskId");
+
+                    b.Navigation("Task");
                 });
 
             modelBuilder.Entity("ProjectModelResourceModel", b =>
@@ -470,11 +450,19 @@ namespace API.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("API.Models.ClientStatusModel", b =>
+                {
+                    b.Navigation("Client");
+                });
+
             modelBuilder.Entity("API.Models.ProjectModel", b =>
                 {
-                    b.Navigation("ProjectStatus");
-
                     b.Navigation("Task");
+                });
+
+            modelBuilder.Entity("API.Models.ProjectStatusModel", b =>
+                {
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("API.Models.ResourceStatusModel", b =>
@@ -482,9 +470,19 @@ namespace API.Migrations
                     b.Navigation("Resource");
                 });
 
+            modelBuilder.Entity("API.Models.ResourceTypeModel", b =>
+                {
+                    b.Navigation("Resource");
+                });
+
             modelBuilder.Entity("API.Models.TaskModel", b =>
                 {
                     b.Navigation("TaskTime");
+                });
+
+            modelBuilder.Entity("API.Models.TaskStatusModel", b =>
+                {
+                    b.Navigation("Task");
                 });
 #pragma warning restore 612, 618
         }

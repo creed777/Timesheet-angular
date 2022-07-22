@@ -33,13 +33,13 @@ namespace API.Controllers
         /// Returns all active project resources fo the given type
         /// </summary>
         /// <returns><see cref="IEnumerable{ResourceDto}"/></returns>
-        [HttpGet("{resourceTypeName}")]
-        public async Task<ActionResult<IEnumerable<ResourceDto>>> GetResourcesByTypeAsync(string resourceTypeName)
+        [HttpGet("{resourceTypeId}")]
+        public async Task<ActionResult<IEnumerable<ResourceDto>>> GetResourcesByTypeAsync(int resourceTypeId)
         {
-            if(resourceTypeName == null)
-                return BadRequest(new ArgumentNullException(resourceTypeName));
+            if(resourceTypeId == 0)
+                return BadRequest(new ArgumentNullException(resourceTypeId.ToString()));
 
-            return await _resourceDomain.GetResourcesByTypeAsync(resourceTypeName);
+            return await _resourceDomain.GetResourcesByTypeAsync(resourceTypeId);
         }
 
         /// <summary>
@@ -48,10 +48,10 @@ namespace API.Controllers
         /// <param name="resourceId"></param>
         /// <returns><see cref="ActionResult{ResourceModel}"/></returns>
         [HttpGet("{resourceId}")]
-        public async Task<ActionResult<ResourceDto>> GetResourceByIdAsync(string resourceId)
+        public async Task<ActionResult<ResourceDto>> GetResourceByIdAsync(int resourceId)
         {
-            if (string.IsNullOrEmpty(resourceId))
-                return BadRequest(new ArgumentNullException(resourceId));
+            if (resourceId == 0)
+                return BadRequest(new ArgumentNullException());
 
             var resource = await _resourceDomain.GetResourceByIdAsync(resourceId);
             return resource;
@@ -94,16 +94,16 @@ namespace API.Controllers
         /// <param name="resource"></param>
         /// <returns><see cref="ActionResult{TValue}"/></returns>
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("resource")]
-        public async Task<ActionResult> AddResourceAsync(ResourceDto resource)
+        [HttpPost]
+        public async Task<ActionResult> AddResourceAsync(CreateResourceDto resource)
         {
             if (resource == null)
                 return BadRequest(new ArgumentNullException());
 
             var result = await _resourceDomain.AddResourceAsync(resource);
-            if (result != -1)
+            if (result > 0)
             {
-                return CreatedAtAction(nameof(AddResourceAsync), new { id = resource.ResourceId }, resource);
+                return Ok(result);
             }
             else
             {
@@ -117,10 +117,10 @@ namespace API.Controllers
         /// <param name="resourceId"></param>
         /// <returns><see cref="IActionResult"/></returns>
         [HttpDelete("{resourceId}")]
-        public async Task<IActionResult> DeleteResource(string resourceId)
+        public async Task<IActionResult> DeleteResource(int resourceId)
         {
-            if (string.IsNullOrEmpty(resourceId))
-                return BadRequest(new ArgumentNullException(resourceId));
+            if (resourceId == 0)
+                return BadRequest(new ArgumentNullException());
 
             var result = await _resourceDomain.DeleteResourceAsync(resourceId);
             if(result != -1)

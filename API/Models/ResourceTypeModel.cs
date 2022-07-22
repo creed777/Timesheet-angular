@@ -10,6 +10,7 @@ namespace API.Models
         [Required]
         public string Name { get; set; }
         public decimal? Cost { get; set; }
+        public virtual ICollection<ResourceModel> Resource { get; set; }
 
         public static implicit operator ResourceTypeDto(ResourceTypeModel resource)
         {
