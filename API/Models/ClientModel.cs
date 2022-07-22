@@ -22,7 +22,8 @@ namespace API.Models
         {
             return new ClientDto()
             {
-                ClientId = client.ClientSn,
+                ClientId = client.ClientId,
+                ClientSn = client.ClientSn,
                 ClientName = client.ClientName,
                 ClientDescription = client.ClientDescription,
                 ClientStatusId = client.ClientStatus.Id

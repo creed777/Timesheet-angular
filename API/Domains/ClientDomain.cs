@@ -13,10 +13,14 @@ namespace API.Domains
             _tds = tds;
         }
 
-        public async Task<ClientDto> GetClientByIdAsync(string clientId)
+        public async Task<ClientDto> GetClientByIdAsync(int clientId)
         {
             var result = await _tds.GetClientByIdAsync(clientId);
 
+            if(result.ClientId == 0)
+            {
+                return null;
+            }
             var dtoMapped = result;
             return dtoMapped;
         }
@@ -29,7 +33,7 @@ namespace API.Domains
             return dtoMapped;
         }
 
-        public async Task<int> AddClientAsync(ClientDto client)
+        public async Task<int> AddClientAsync(CreateClientDto client)
         {
             ClientModel clientModel = client;
 
