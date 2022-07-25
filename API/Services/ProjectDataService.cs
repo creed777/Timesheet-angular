@@ -57,7 +57,12 @@ namespace API.Services
             }
             else
             {
-                return new ProjectModel();
+                return new ProjectModel()
+                {
+                    ProjectStatus = new ProjectStatusModel(),
+                    Client = new ClientModel(),
+                    Task = new List<TaskModel>()
+                };
             }
         }
 
@@ -94,7 +99,8 @@ namespace API.Services
             try
             {
                 await db.Project.AddAsync(project);
-                return await db.SaveChangesAsync();
+                var results = await db.SaveChangesAsync();
+                return project.ProjectId;
             }
             catch (Exception ex)
             {
