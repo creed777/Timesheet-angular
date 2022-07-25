@@ -38,13 +38,13 @@ namespace API.Domains
             return await _tds.GetProjectStatusList();
         }
 
-        public async Task<int> AddProject(ProjectDto projectDto)
+        public async Task<int> AddProject(CreateProjectDto createProjectDto)
         {
-            if(projectDto == null)
+            if(createProjectDto == null)
                 return -1;
 
-            ProjectModel project = projectDto;
-            return await _tds.AddProject(project);
+            ProjectModel projectModel = createProjectDto;
+            return await _tds.AddProject(projectModel);
         }
 
         public async Task<int> DeleteProject(int projectId)

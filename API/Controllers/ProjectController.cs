@@ -48,20 +48,20 @@ namespace API.Controllers
         }
 
         /// <summary>
-        /// Creates a new project.  If there  is an exception saving the project, the Id field will be null.
+        /// Creates a new project.
         /// </summary>
-        /// <param name="project"></param>
-        /// <returns><see cref="ActionResult{ProjectDto}"/></returns>
+        /// <param name="createProjectDto"></param>
+        /// <returns><see cref="IActionResult"/></returns>
         [HttpPost]
-        public async Task<ActionResult<ProjectDto>> AddProject(ProjectDto project)
+        public async Task<ActionResult<IActionResult>> AddProject(CreateProjectDto createProjectDto)
         {
-            if (project == null)
-                return BadRequest(new ArgumentNullException("project"));
+            if (createProjectDto == null)
+                return BadRequest(new ArgumentNullException("createProjectDto"));
 
-            var result = await _projectDomain.AddProject(project);
+            var result = await _projectDomain.AddProject(createProjectDto);
             if(result > 0)
             {
-                return CreatedAtAction(nameof(AddProject), new { id = project.ProjectId }, project);
+                return Ok(result);
             }
             else
             {
@@ -81,7 +81,7 @@ namespace API.Controllers
                 return BadRequest();
 
             var result = await _projectDomain.DeleteProject(projectId);
-            if(result != -1)
+            if(result > 0)
             {
                 return Ok(await _projectDomain.DeleteProject(projectId));
             }

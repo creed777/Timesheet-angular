@@ -41,7 +41,7 @@ namespace API.Models
                 ProjectSn = project.ProjectSn,
                 ProjectName = project.ProjectName,
                 ProjectDescription = project.ProjectDescription,
-                ClientId = project.Client.ClientSn,
+                ClientId = project.Client.ClientId,
                 DivisionId = project.DivisionId,
                 EstimatedStartDate = project.EstimatedStartDate,
                 EstimatedEndDate = project.EstimatedEndDate,
