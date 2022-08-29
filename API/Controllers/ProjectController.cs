@@ -30,7 +30,7 @@ namespace API.Controllers
         /// Returns a project by project id.
         /// </summary>
         /// <param name="projectId"></param>
-        /// <returns><see cref="ProjectModel" /></returns>
+        /// <returns><see cref="ProjectDto" /></returns>
         /// <remarks>
         /// Sample request:
         ///
@@ -38,13 +38,29 @@ namespace API.Controllers
         ///
         /// </remarks>
         [HttpGet("{projectId}")]
-        public async Task<ActionResult<ProjectModel>> GetProject(int projectId)
+        public async Task<ActionResult<ProjectDto>> GetProject(int projectId)
         {
             if (projectId == 0)
                 return BadRequest("Project id cannot be null");
 
             return Ok(await _projectDomain.GetProject(projectId));
 
+        }
+
+        /// <summary>
+        /// Returns a project by project id.
+        /// </summary>
+        /// <returns><see cref="ProjectStatusModel" /></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /API/Project/GetAllProjectStatus
+        ///
+        /// </remarks>
+        [HttpGet()]
+        public async Task<ActionResult<ProjectStatusModel>> GetAllProjectStatus()
+        {
+            return Ok(await _projectDomain.GetProjectStatusList());
         }
 
         /// <summary>
