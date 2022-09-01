@@ -35,8 +35,8 @@ namespace API.DTO
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public uint ResourceTypeId { get; set; }
-        public uint ResourceStatusId { get; set; }
+        public string ResourceType { get; set; }
+        public string ResourceStatus { get; set; }
 
         public static implicit operator ResourceModel(CreateResourceDto resource)
         {
@@ -46,12 +46,12 @@ namespace API.DTO
                 LastName = resource.LastName,
                 ResourceType = new ResourceTypeModel()
                 {
-                    ResourceTypeId = resource.ResourceTypeId
+                    Name = resource.ResourceType
                 },
 
                 ResourceStatus = new ResourceStatusModel()
                 {
-                    ResourceStatusId = resource.ResourceStatusId
+                    StatusName = resource.ResourceStatus
                 }
             };
         }

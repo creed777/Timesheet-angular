@@ -7,15 +7,14 @@ namespace API.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [Required] 
         public string ClientStatusName { get; set; }
         public virtual ICollection<ClientModel> Client { get; set; }
-        
+         
         public static implicit operator ClientStatusDto(ClientStatusModel clientStatusModel)
         {
             return new ClientStatusDto()
             {
-                Id = clientStatusModel.Id,
                 ClientStatusName = clientStatusModel.ClientStatusName
             };
         }
