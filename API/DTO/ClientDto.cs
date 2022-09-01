@@ -8,7 +8,7 @@ namespace API.DTO
         public string ClientSn { get; set; }
         public string ClientName { get; set; }
         public string ClientDescription { get; set; }
-        public int ClientStatusId { get; set; }
+        public string ClientStatusName { get; set; }
 
 
         public static implicit operator ClientModel(ClientDto client)
@@ -21,7 +21,7 @@ namespace API.DTO
                 ClientDescription = client.ClientDescription,
                 ClientStatus = new ClientStatusModel()
                 {
-                    Id = client.ClientStatusId,
+                    ClientStatusName = client.ClientStatusName
                 }
             };
         }
@@ -32,7 +32,7 @@ namespace API.DTO
         public string ClientSn { get; set; }
         public string ClientName { get; set; }
         public string ClientDescription { get; set; }
-        public int ClientStatusId { get; set; }
+        public string ClientStatusName { get; set; }
 
         public static implicit operator ClientModel(CreateClientDto client)
         {
@@ -43,7 +43,7 @@ namespace API.DTO
                 ClientDescription = client.ClientDescription,
                 ClientStatus = new ClientStatusModel()
                 {
-                    Id = client.ClientStatusId,
+                    ClientStatusName = client.ClientStatusName,
                 }
             };
         }

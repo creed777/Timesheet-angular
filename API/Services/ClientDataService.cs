@@ -103,7 +103,7 @@ namespace API.Services
                 await using var db = _dbFactory.CreateDbContext();
 
                 var status = await db.ClientStatus
-                    .Where(x => x.Id == client.ClientStatus.Id)
+                    .Where(x => x.ClientStatusName == client.ClientStatus.ClientStatusName)
                     .SingleOrDefaultAsync();
 
                 client.ClientStatus = status;

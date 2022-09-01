@@ -5,12 +5,13 @@ namespace API.DTO
 {
     public class ProjectDto
     {
-        public int ProjectId { get; set; } 
+        public uint ProjectId { get; set; } 
         public string ProjectSn { get; set; }
         public string ProjectName { get; set; } = string.Empty;
         public string ProjectDescription { get; set; } = string.Empty;
-        public int ClientId { get; set; }
-        public uint? DivisionId { get; set; }
+        public uint ClientId { get; set; }
+        public string ClientName { get; set; }
+        public uint? DivisionId { get; set; } 
         public DateTime? EstimatedStartDate { get; set; }
         public DateTime? EstimatedEndDate { get; set; }
         public DateTime? ActualStartDate { get; set; }
@@ -22,19 +23,20 @@ namespace API.DTO
         public decimal? ActualLaborCost { get; set; }
         public decimal? EstimatedMaterialCost { get; set; }
         public decimal? ActualMaterialCost { get; set; }
-        public uint ProjectStatusId { get; set; }
+        public string ProjectStatus { get; set; }
 
         public static implicit operator ProjectModel(ProjectDto project)
         {
             return new ProjectModel
             {
-                ProjectId = project.ProjectId,
+                ProjectId = (int)project.ProjectId,
                 ProjectName = project.ProjectName,
                 ProjectSn = project.ProjectSn,
                 ProjectDescription = project.ProjectDescription,
                 Client = new ClientModel()
                 {
-                    ClientId = project.ClientId
+                    ClientId = (int)project.ClientId,
+                    ClientName = project.ClientName
                 },
                 DivisionId = project.DivisionId,
                 EstimatedStartDate = project.EstimatedStartDate,
@@ -49,8 +51,7 @@ namespace API.DTO
                 ActualMaterialCost = project.EstimatedMaterialCost,
                 ProjectStatus = new ProjectStatusModel()
                 {
-                    Id = project.ProjectStatusId,
-
+                    StatusName = project.ProjectStatus
                 }
             };
         }
@@ -78,8 +79,8 @@ namespace API.DTO
         public decimal? ActualLaborCost { get; set; }
         public decimal? EstimatedMaterialCost { get; set; }
         public decimal? ActualMaterialCost { get; set; }
-        [Required(ErrorMessage = "Project Status Id is required")]
-        public uint ProjectStatusId { get; set; }
+        [Required(ErrorMessage = "Project Status is required")]
+        public string ProjectStatus { get; set; }
 
         public static implicit operator ProjectModel(CreateProjectDto project)
         {
@@ -105,8 +106,7 @@ namespace API.DTO
                 ActualMaterialCost = project.EstimatedMaterialCost,
                 ProjectStatus = new ProjectStatusModel()
                 {
-                    Id = project.ProjectStatusId,
-
+                    StatusName = project.ProjectStatus
                 }
             };
         }
