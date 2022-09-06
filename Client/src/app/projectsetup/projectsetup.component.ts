@@ -4,9 +4,13 @@ import { FormControl, FormGroup, FormBuilder, RequiredValidator } from '@angular
 import { ProjectModel } from '../../models/project-model';
 import { ProjectStatusModel } from '../../models/project-status-model';
 import { ProjectService } from "../../services/project.service";
+import { ResourceService } from "../../services/resource.service";
 import { ClientModel } from '../../models/client-model';
+import { ResourceModel } from '../../models/resource-model';
 import { ClientService } from "../../services/client.service";
-import { formatDate } from "@angular/common";
+import { SpinnerComponent } from "../../app/spinner/spinner.component";
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { lastValueFrom } from "rxjs";
 
 @Component({
   selector: 'app-projectsetup',
@@ -17,12 +21,13 @@ import { formatDate } from "@angular/common";
 
 export class ProjectsetupComponent implements OnInit {
 
-
-  constructor(private fb: FormBuilder, private projectService: ProjectService, private clientService: ClientService) { }
+  constructor(private fb: FormBuilder, private projectService: ProjectService, private clientService: ClientService, private resourceService: ResourceService,
+    public spinner: MatDialog) { }
 
   projects: ProjectModel[] = [];
   clients: ClientModel[] = [];
   projectStatus: ProjectStatusModel[] = [];
+  projectManager: ResourceModel[] = [];
 
   projectSetupForm = this.fb.group({
     txtName: [''],
@@ -30,39 +35,58 @@ export class ProjectsetupComponent implements OnInit {
     txtDescription: [''],
     txtEstTotalHrs: [''],
     txtEstLaborCost: [''],
+    ddlProjectMgr: [''], 
     ddlStatus: [''],
     ddlClient: [''],
     chkCustomTask: [''],
-    txtStartDate: [Date],
+    txtStartDate: [Date], 
     txtEndDate: [Date]
   });
 
-  ngOnInit(): void {
-    this.projectService.getAllProjects().subscribe((data) => {
-      this.projects = data;
-      //this.projects.forEach(x => console.log(x.projectName));
-    }, (error) => {
-      console.log("an error occured in the project service");
-    })
+  async ngOnInit() {
 
-    this.clientService.getAllClients().subscribe((data) => {
-      this.clients = data;
-      //this.clients.forEach(x => console.log(x.clientName));
-    }, (error) => {
-      console.log("an error occured in the client service:" + error );
-    })
+    this.showSpinner();
+    await this.loadData()
+    this.hideSpinner();
+  }
 
-    this.projectService.getAllProjectStatus().subscribe((data) => {
-      this.projectStatus = data;
-      //this.projectStatus.forEach(x => console.log(x.statusName));
-    }, (error) => {
-      console.log("an error occured in the client service");
-    })
+  private async loadData() {
+    let projectData = await lastValueFrom(this.projectService.getAllProjects());
+    this.projects = projectData;
+
+    var clientData = await lastValueFrom(this.clientService.getAllClients());
+      this.clients = clientData;
+
+    let projectStatusData = await lastValueFrom(this.projectService.getAllProjectStatus());
+      this.projectStatus = projectStatusData;
+
+
+    let resourceData = await lastValueFrom(this.resourceService.getAllProjectMgrs());
+      this.projectManager = resourceData;
+}
+
+  private showSpinner(): void {
+
+    const spinnerConfig = new MatDialogConfig();
+    spinnerConfig.disableClose = true;
+    spinnerConfig.autoFocus = true;
+    spinnerConfig.width = '400px';
+    spinnerConfig.height = '150px';
+    spinnerConfig.closeOnNavigation = false;
+    spinnerConfig.disableClose = true;
+    spinnerConfig.hasBackdrop = true;
+
+    this.spinner.open(SpinnerComponent, spinnerConfig)
+  }
+
+  private hideSpinner(): void {
+    this.spinner.closeAll()
   }
 
   public onSubmit(): void {
     var statusId: number;
     var clientId: number;
+    var projectMgrId: number;
 
     if (!isNaN(Number(this.projectSetupForm.value.ddlStatus)))
     {
@@ -77,10 +101,10 @@ export class ProjectsetupComponent implements OnInit {
       clientId = 0;
     }
 
-    if (!isNaN(Number(this.projectSetupForm.value.ddlProjectManager))) {
-      clientId = Number(this.projectSetupForm.value.ddlClient);
+    if (!isNaN(Number(this.projectSetupForm.value.ddlProjectMgr))) {
+      projectMgrId = Number(this.projectSetupForm.value.ddlProjectMgr);
     } else {
-      clientId = 0;
+      projectMgrId = 0;
     }
 
     if (this.projectSetupForm.value.txtStartDate != undefined || this.projectSetupForm.value.txtStartDate != null) {
@@ -105,11 +129,21 @@ export class ProjectsetupComponent implements OnInit {
       projectName: this.projectSetupForm.value.txtName?.toString() == null ? '' : this.projectSetupForm.value.txtName.toString(),
       projectStatusId: statusId,
       clientId: clientId,
+      divisionId: 0,
       estimatedStartDate: startDate,
       estimatedEndDate: endDate,
-      projectManagerId
+      actualStartDate: undefined,
+      actualEndDate: undefined,
+      projectManagerId: projectMgrId,
+      estimatedTotalHours: undefined,
+      actualTotalHours: undefined,
+      estimatedLaborCost: undefined,
+      actualLaborCost: undefined,
+      estimatedMaterialCost: undefined,
+      actualMaterialCost: undefined
     }
-      
+
+    this.projectService.submitProjectForm(projectSubmit);
     console.warn(this.projectSetupForm.value);
   }
 

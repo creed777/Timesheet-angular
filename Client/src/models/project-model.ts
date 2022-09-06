@@ -7,15 +7,15 @@ export class ProjectModel {
   public divisionId: number;
   public estimatedStartDate: Date;
   public estimatedEndDate: Date;
-  public actualStartDate: Date;
-  public actualEndDate: Date;
-  public projectManagerId: number;
-  public estimatedTotalHours: number;
-  public actualTotalHours: number;
-  public estimatedLaborCost: number;
-  public actualLaborCost: number;
-  public estimatedMaterialCost: number;
-  public actualMaterialCost: number;
+  public actualStartDate?: Date;
+  public actualEndDate?: Date;
+  public projectManagerId?: number;
+  public estimatedTotalHours?: number;
+  public actualTotalHours?: number;
+  public estimatedLaborCost?: number;
+  public actualLaborCost?: number;
+  public estimatedMaterialCost?: number;
+  public actualMaterialCost?: number;
   public projectStatusId: number;
 
   constructor(projectSn: string,

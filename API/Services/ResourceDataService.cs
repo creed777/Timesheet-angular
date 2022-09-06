@@ -94,7 +94,10 @@ namespace API.Services
             {
                 var result = await db.Resource
                     .Where(x => x.ResourceType.ResourceTypeId == resourceTypeId)
+                    .OrderBy(x => x.LastName)
+                    .AsNoTracking()
                     .Include(x => x.ResourceType)
+                    .AsNoTracking()
                     .Include(x => x.ResourceStatus)
                     .AsNoTracking()
                     .ToListAsync();

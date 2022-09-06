@@ -7,24 +7,25 @@
         <legend>Project Basics</legend>
         <div class="col-25"><label for="txtName">Name</label></div>
         <div class="col-75"><input type="text" id="txtName" formControlName="txtName" required /></div>
-        <div class="col-25"><label for="txtSn">Short Name or Code</label></div>
+        <div class="col-25"><label for="txtSn">Short Name</label></div>
         <div class="col-75"><input type="text" id="txtSn" formControlName="txtSn" required /></div>
         <div class="col-25"><label for="txtDescription">Description</label></div>
         <div class="col-75"><textarea rows=3 cols=20 id="txtDescription" formControlName="txtDescription"></textarea></div>
         <div class="col-25"><label for="ddlStatus">Status</label></div>
         <div class="col-75">
-          <select [(ngModel)]="selectStatus" id="ddlStatus" formControlName="ddlStatus">
+          <select id="ddlStatus" formControlName="ddlStatus">
             <option selected="selected" value="0">Select a status</option>
-            <option *ngFor="let status of projectStatus" value="statusId">
+            <option *ngFor="let status of projectStatus" value="{{ status.id }}">
               {{ status.statusName }}
             </option>
           </select>
         </div>
+        <div class="col-25"><label for="ddlProjectMgr">Project Mgr</label></div>
         <div class="col-75">
           <select id="ddlProjectMgr" formControlName="ddlProjectMgr">
             <option selected="selected" value="0">Select a Project Manager</option>
-            <option *ngFor="let manager of projectManager" value="projectManagerId">
-              {{ manager.ProjectManagerId }}
+            <option *ngFor="let manager of projectManager" value="{{ manager.resourceId }}">
+              {{ manager.lastName }}, {{ manager.firstName }}
             </option>
           </select>
         </div>
@@ -32,7 +33,7 @@
         <div class="col-75">
           <select id="ddlClient" formControlName="ddlClient">
             <option selected="selected" value="0">Select a client</option>
-            <option *ngFor="let client of clients" value="clientId">
+            <option *ngFor="let client of clients" value="{{ client.clientId }}">
               {{ client.clientName }}
             </option>
           </select>

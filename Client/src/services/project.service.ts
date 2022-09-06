@@ -52,4 +52,15 @@ export class ProjectService {
 
   }
 
+  public submitProjectForm(projectForm: ProjectModel): boolean {
+
+    let newProjectApi = environment.apiBaseUrl + 'Project/AddProject';
+    this.http
+      .post(newProjectApi, projectForm)
+      .subscribe((response: any) => {
+        console.log(response);
+      })
+    return true;
+  }
+
 }
