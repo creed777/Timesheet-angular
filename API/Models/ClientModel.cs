@@ -10,13 +10,13 @@ namespace API.Models
         [Key]
         public int ClientId { get; set; }
         [Required]
-        public string ClientSn { get; set; }
+        public string ClientSn { get; set; } = string.Empty;
         [Required]
-        public string ClientName { get; set; }
+        public string ClientName { get; set; } = string.Empty;
         [Required]
-        public string ClientDescription { get; set; }
-        public virtual ClientStatusModel ClientStatus { get; set; }
-        public virtual ICollection<ProjectModel> Project { get; set; }
+        public string ClientDescription { get; set; } = string.Empty;
+        public virtual ClientStatusModel ClientStatus { get; set; } = new ClientStatusModel();
+        public virtual ICollection<ProjectModel> Project { get; set; } = new List<ProjectModel>();
 
         public static implicit operator ClientDto(ClientModel client)
         {
@@ -26,7 +26,7 @@ namespace API.Models
                 ClientSn = client.ClientSn,
                 ClientName = client.ClientName,
                 ClientDescription = client.ClientDescription,
-                ClientStatusId = client.ClientStatus.Id
+                ClientStatusName = client.ClientStatus.ClientStatusName
             };
         }
     }

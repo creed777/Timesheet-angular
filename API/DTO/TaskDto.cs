@@ -8,6 +8,7 @@ namespace API.DTO
     {
         public int Id { get; set; }
         public int ProjectId { get; set; }
+        public string ProjectName { get; set; }
         public string TaskName { get; set; }
         public string TaskDescription { get; set; }
         public DateTime? EstimatedStartDate { get; set; }
@@ -25,6 +26,7 @@ namespace API.DTO
                 Project = new ProjectModel()
                 {
                     ProjectId = task.ProjectId,
+                    ProjectName = task.ProjectName
                 },
                 TaskName = task.TaskName,
                 TaskDescription = task.TaskDescription,

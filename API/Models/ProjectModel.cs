@@ -37,11 +37,11 @@ namespace API.Models
         {
             return new ProjectDto
             {
-                ProjectId = project.ProjectId,
+                ProjectId = (uint)project.ProjectId,
                 ProjectSn = project.ProjectSn,
                 ProjectName = project.ProjectName,
                 ProjectDescription = project.ProjectDescription,
-                ClientId = project.Client.ClientId,
+                ClientId = (uint)project.Client.ClientId,
                 DivisionId = project.DivisionId,
                 EstimatedStartDate = project.EstimatedStartDate,
                 EstimatedEndDate = project.EstimatedEndDate,
@@ -53,7 +53,7 @@ namespace API.Models
                 ActualLaborCost = project.ActualLaborCost,
                 EstimatedMaterialCost = project.EstimatedMaterialCost,
                 ActualMaterialCost = project.EstimatedMaterialCost,
-                ProjectStatusId = project.ProjectStatus.Id
+                ProjectStatus = project.ProjectStatus.StatusName
             };
         }
     }
